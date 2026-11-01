@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Risho Main Store Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Shippori+Mincho:wght@500;700&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Design sample 4 (design-samples/4-white-premium.html) applied to the whole menu */
+:root{--fs:1.07;--paper:#f8f5ef;--ink:#1d1b18;--sub:#6f685e;--rule:#d8d1c5;--red:#8e1f1a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:calc(16px*var(--fs))/1.6 "Source Serif 4","Shippori Mincho",serif}
+html[lang=ja] body{font-size:calc(15px*var(--fs));line-height:1.75}
+img{display:block;max-width:100%}
+main{max-width:560px;margin:0 auto;padding:0 0 64px}
+.pad{padding:0 24px}
+
+header{padding:40px 24px 26px;text-align:center}
+header .logo{height:96px;width:auto;margin:0 auto;filter:brightness(0)}
+header h1{font:600 calc(14px*var(--fs)) "Source Serif 4",serif;letter-spacing:.32em;text-transform:uppercase;margin-top:16px;color:var(--sub)}
+header .line{width:40px;height:1px;background:var(--red);margin:16px auto 0}
+
+/* category nav */
+.catnav{position:sticky;top:0;z-index:5;background:var(--paper);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.catnav ul{position:relative;list-style:none;display:flex;overflow-x:auto;scrollbar-width:none;max-width:560px;margin:0 auto;padding:0 12px}
+.catnav ul::-webkit-scrollbar{display:none}
+.catnav a{display:block;white-space:nowrap;padding:15px 13px 13px;font-size:calc(16px*var(--fs));font-weight:600;color:var(--sub);text-decoration:none;border-bottom:2px solid transparent}
+.catnav a.active{color:var(--ink);border-bottom:3px solid var(--red);padding-bottom:12px}
+.catnav .groups{display:flex;max-width:560px;margin:0 auto;padding:8px 16px 0;gap:8px}
+.catnav .groups button{flex:1;font:600 calc(15px*var(--fs)) "Source Serif 4",serif;letter-spacing:.12em;text-transform:uppercase;padding:9px 0;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
+.catnav .groups button.on{background:var(--ink);color:var(--paper)}
+.catnav li[hidden]{display:none}
+
+#page-drink .group-title{margin-top:28px}
+
+.howto{margin:28px 24px 0;padding:20px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.howto h2{font-weight:600;font-size:calc(18px*var(--fs));color:var(--red);margin-bottom:8px}
+.howto ol{list-style:none;counter-reset:s}
+.howto li{counter-increment:s;position:relative;padding-left:28px;margin:7px 0;font-size:calc(15px*var(--fs))}
+.howto li::before{content:counter(s) ".";position:absolute;left:4px;top:0;font-weight:600;color:var(--red)}
+.howorder{margin:20px 24px 0;padding:14px 18px;border:1px solid var(--ink)}
+.howorder h2{font-weight:600;font-size:calc(16px*var(--fs));margin-bottom:4px}
+.notmo{font-weight:600;color:var(--red);font-size:calc(14px*var(--fs));margin-bottom:6px}
+.orderbar .in>span small{display:block;font-size:calc(12px*var(--fs));color:#e9c9c5}
+.staff .notmo{margin:8px 0 2px}
+.howorder .alt{margin-top:8px;padding-top:8px;border-top:1px dashed var(--rule);font-size:calc(14px*var(--fs))}
+.howorder ol{list-style:none;counter-reset:o}
+.howorder li{counter-increment:o;position:relative;padding-left:24px;margin:4px 0;font-size:calc(14px*var(--fs))}
+.howorder li::before{content:counter(o) ".";position:absolute;left:2px;font-weight:600}
+.legend{margin:14px 24px 0;font-size:calc(14px*var(--fs));color:var(--sub);display:flex;align-items:flex-start;gap:8px}
+.rec-icon{display:inline-block;width:18px;height:19px;vertical-align:-3px;flex:none}
+.legend .rec-icon{margin-top:3px}
+
+.group-title{margin:64px 24px 0;display:flex;align-items:center;gap:14px;font-weight:600;font-size:calc(13px*var(--fs));letter-spacing:.3em;text-transform:uppercase;color:var(--sub)}
+.group-title::before,.group-title::after{content:"";flex:1;height:1px;background:var(--ink)}
+
+section{margin-top:48px;scroll-margin-top:48px}
+.hero{position:relative}
+.hero img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#ddd}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(20,12,10,.78))}
+.hero .label{position:absolute;left:24px;right:24px;bottom:18px;z-index:1;color:#fff}
+.hero-cap{padding:6px 24px 0;font-size:calc(13px*var(--fs));color:var(--sub);text-align:right}
+.hero-cap b{font-weight:600;color:var(--ink)}
+.jnote{margin-top:16px;padding:14px 18px;border:1px solid var(--ink);font-size:calc(15px*var(--fs));color:#3b3732}
+.label span{font-size:calc(13px*var(--fs));letter-spacing:.2em;color:#f1e6dc;font-family:"Shippori Mincho",serif}
+.label h2{font-weight:600;font-size:calc(28px*var(--fs));line-height:1.2}
+.plain{padding:0 24px}
+.plain span{font-size:calc(13px*var(--fs));letter-spacing:.2em;color:var(--sub);font-family:"Shippori Mincho",serif}
+.plain h2{font-weight:600;font-size:calc(26px*var(--fs));line-height:1.25;color:var(--ink)}
+.plain::after{content:"";display:block;width:40px;height:1px;background:var(--red);margin-top:12px}
+.styles{margin-top:12px;font-size:calc(14px*var(--fs));color:#3b3732;padding:8px 12px;border-left:2px solid var(--red)}
+.styles b{font-weight:600;margin-right:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin:6px 0 4px}
+.chips button{font:inherit;font-size:calc(13px*var(--fs));padding:5px 10px;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
+.chips button:active{transform:scale(.95)}
+.vrow.st{padding-left:12px}
+.vrow[hidden]{display:none}
+.hint{font-size:calc(13px*var(--fs));color:var(--sub);margin-top:6px}
+.hint a{color:var(--red)}
+.lead{margin-top:16px;font-size:calc(15px*var(--fs));color:#3b3732}
+.caution{margin-top:10px;font-size:calc(14px*var(--fs));font-weight:600;color:var(--red)}
+
+.feature{margin-top:24px;padding:22px 22px 20px;border:1px solid var(--ink);outline:1px solid var(--ink);outline-offset:-6px;text-align:center}
+.feature h3{font-weight:600;font-size:calc(17px*var(--fs));color:var(--red)}
+.feature p{font-size:calc(15px*var(--fs));color:#3b3732;margin-top:4px}
+
+.item{padding:20px 0;border-bottom:1px solid var(--rule)}
+.item .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.item h3{font-weight:600;font-size:calc(18px*var(--fs));line-height:1.35}
+.item h3 .rec-icon{margin-right:6px}
+.item .price{white-space:nowrap;font-size:calc(16px*var(--fs));text-align:right;line-height:1.4}
+.item .price small{display:block;font-size:calc(12px*var(--fs));color:var(--sub)}
+.item .price small.min{color:var(--red)}
+.item .jp{font:700 calc(14px*var(--fs)) "Shippori Mincho",serif;color:#4a443c;letter-spacing:.08em;margin-top:3px}
+.item p{color:#3b3732;margin-top:8px;font-size:calc(15px*var(--fs))}
+.item .grill{margin-top:10px;font-size:calc(14px*var(--fs));color:var(--sub)}
+.item .grill b{color:var(--ink);font-weight:600}
+.lim{display:inline-block;font-size:calc(11px*var(--fs));letter-spacing:.14em;text-transform:uppercase;padding:1px 8px;margin-bottom:6px;border:1px solid var(--red);color:var(--red)}
+.contents{margin-top:8px;font-size:calc(14px*var(--fs));color:#3b3732}
+.contents li{list-style:none;padding-left:14px;position:relative}
+.contents li::before{content:"";position:absolute;left:2px;top:.75em;width:5px;height:1px;background:var(--red)}
+.origin{font-size:calc(13px*var(--fs));color:var(--sub);margin-top:2px}
+.meta{margin-top:10px;font-size:calc(14px*var(--fs));display:grid;grid-template-columns:auto 1fr;gap:2px 12px;color:#3b3732}
+.meta dt{color:var(--red)}
+.addon{margin-top:20px;padding:14px 16px;border:1px solid var(--red);color:var(--red);font-size:calc(15px*var(--fs))}
+.photo{margin-top:20px}
+.photo img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#ddd}
+.photo figcaption{font-size:calc(13px*var(--fs));color:var(--sub);margin-top:6px}
+.sec-legend{margin-top:14px;font-size:calc(13px*var(--fs));color:var(--sub);display:flex;align-items:center;gap:6px}
+
+footer{margin-top:56px;padding:20px 24px;border-top:1px solid var(--rule);font-size:calc(13px*var(--fs));color:var(--sub);text-align:center}
+.float{position:fixed;right:14px;bottom:14px;z-index:10;display:flex;flex-direction:column;gap:6px}
+.float a,.float button{width:40px;height:40px;display:grid;place-items:center;background:var(--paper);border:1px solid var(--ink);color:var(--ink);font:600 12px "Source Serif 4",serif;text-decoration:none;cursor:pointer}
+.float .fs{display:flex;flex-direction:column}
+.float .fs button+button{border-top:0}
+
+/* ---- order list: guests add dishes, then show the list to staff (nothing is sent anywhere) ---- */
+.order{margin-top:12px;display:flex;justify-content:flex-end}
+.vrows{margin-top:12px;border-top:1px dashed var(--rule)}
+.vrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed var(--rule);font-size:calc(15px*var(--fs))}
+.vrow small{color:var(--sub);font-size:calc(13px*var(--fs));margin-left:6px}
+.step{display:inline-flex;align-items:center;flex:none}
+.step button{font:inherit;cursor:pointer;background:var(--paper);color:var(--ink);border:1px solid var(--ink)}
+.step .addbtn{padding:5px 16px;font-size:calc(14px*var(--fs));font-weight:600}
+.step .pm{width:34px;height:34px;font-size:calc(18px*var(--fs));line-height:1}
+.step b{min-width:34px;text-align:center;font-size:calc(16px*var(--fs))}
+.step.on .pm{background:var(--ink);color:var(--paper)}
+.orderbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--ink);color:var(--paper)}
+.orderbar .in{max-width:560px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px}
+.orderbar button{font:600 calc(15px*var(--fs)) "Source Serif 4",serif;background:var(--paper);color:var(--ink);border:0;padding:10px 16px;cursor:pointer}
+body.has-order{padding-bottom:64px}
+body.has-order .float{bottom:76px}
+.staff{position:fixed;inset:0;z-index:30;background:var(--paper);overflow-y:auto}
+.staff .in{max-width:560px;margin:0 auto;padding:12px 16px 72px}
+.staff h2{font:700 19px "Source Serif 4","Shippori Mincho",serif;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.staff .sub{font-size:12px;line-height:1.4;color:var(--sub);margin-top:4px}
+.srow{display:grid;grid-template-columns:1fr auto;gap:0 10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--rule)}
+.srow .sj{font:700 18px/1.3 "Shippori Mincho",serif}
+.srow .q{font:700 19px "Source Serif 4",serif;white-space:nowrap}
+.srow .se{grid-column:1/3;font-size:12px;line-height:1.3;color:var(--sub);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.srow .step .pm{width:26px;height:24px;font-size:15px}
+.staff .total{margin-top:8px;font-size:14px;text-align:right}
+.staff .total small{display:block;color:var(--sub);font-size:11px}
+.staff .btns{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--rule)}
+.staff .btns .in2{max-width:560px;margin:0 auto;display:flex;gap:10px;padding:8px 16px}
+.staff .btns button{flex:1;font:600 14px "Source Serif 4",serif;padding:9px;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
+.staff .btns .clear{flex:none;color:var(--red);border-color:var(--red)}
+
+/* ---- motion: short and quiet; switched off for people who ask their phone for less motion ---- */
+:root{--ease:cubic-bezier(.2,.7,.2,1)}
+.orderbar{transform:translateY(110%);visibility:hidden;transition:transform .4s var(--ease),visibility 0s .4s}
+.orderbar.show{transform:none;visibility:visible;transition:transform .4s var(--ease)}
+.staff{transform:translateY(100%);visibility:hidden;transition:transform .4s var(--ease),visibility 0s .4s}
+.staff.open{transform:none;visibility:visible;transition:transform .4s var(--ease)}
+.step button{transition:transform .12s,background-color .2s,color .2s}
+.step button:active,.catnav .groups button:active,.orderbar button:active,.float button:active{transform:scale(.93)}
+.catnav a{transition:color .2s,border-color .25s}
+.catnav .groups button{transition:background-color .25s,color .25s}
+.float{transition:transform .35s var(--ease),opacity .35s}
+.float.away{transform:translateX(72px);opacity:0;pointer-events:none}
+@media (prefers-reduced-motion: no-preference){
+  header .logo,header h1,header .line{animation:rise .8s var(--ease) both}
+  header h1{animation-delay:.12s} header .line{animation-delay:.24s}
+  .rv{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .6s var(--ease)}
+  .rv.in{opacity:1;transform:none}
+  .hero{overflow:hidden}
+  .hero img{transform:scale(1.08);transition:transform 1.8s var(--ease)}
+  .hero.in img{transform:none}
+  .hero .label{opacity:0;transform:translateY(10px);transition:opacity .6s .25s,transform .7s .25s var(--ease)}
+  .hero.in .label{opacity:1;transform:none}
+  .feature.rv{transform:scale(.97)}
+  .feature.rv.in{transform:none}
+  .step.pop{animation:pop .28s var(--ease)}
+  .step b.bump,#ob-count.bump{display:inline-block;animation:bump .32s var(--ease)}
+  .page-in{animation:pagein .4s var(--ease)}
+}
+@media (prefers-reduced-motion: reduce){
+  .orderbar,.staff,.orderbar.show,.staff.open{transition:none}
+}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+@keyframes pop{0%{transform:scale(.8);opacity:.4}100%{transform:none;opacity:1}}
+@keyframes bump{40%{transform:scale(1.3)}}
+@keyframes pagein{from{opacity:0;transform:translateX(var(--dx,24px))}}
+</style>
+</head>
+<body><div style="background:#1d1b18;color:#f8f5ef;font:12px/1.5 sans-serif;text-align:center;padding:6px 12px">提案用の試作です（正式なメニューではありません） · Prototype for internal review</div>
+<header>
+  <img class="logo" src="https://www.shoya.com/.assets/trademark-restaurant-risho-honkan.svg" alt="李昇 本館">
+  <h1></h1>
+  <div class="line"></div>
+</header>
+<nav class="catnav"><div class="groups"><button data-g="food" id="g-food"></button><button data-g="drink" id="g-drink"></button></div><ul id="catnav"></ul></nav>
+<main>
+  <div id="page-food">
+  <div class="howto"><h2 id="howto-title"></h2><ol id="howto"></ol></div>
+  <p class="legend" id="legend"></p>
+  <div class="howorder"><h2 id="howorder-title"></h2><p class="notmo" id="notmo"></p><ol id="howorder"></ol><p class="alt" id="howorder-alt"></p></div>
+  <h2 class="group-title" id="food-title"></h2>
+  <div id="food"></div>
+  </div>
+  <div id="page-drink" hidden>
+  <h2 class="group-title" id="drink-title"></h2>
+  <div id="drink"></div>
+  </div>
+  <footer id="footer"></footer>
+</main>
+<div class="float"><span class="fs" role="group" aria-label="Text size"><button data-fs="1" aria-label="Larger text">A+</button><button data-fs="-1" aria-label="Smaller text">A−</button></span><a class="totop" href="#">TOP</a></div>
+<div class="orderbar" id="orderbar"><div class="in"><span><span id="ob-count"></span><small id="ob-note"></small></span><button id="ob-show"></button></div></div>
+<div class="staff" id="staff"><div class="in">
+  <h2 id="staff-title"></h2><p class="notmo" id="staff-notmo"></p><p class="sub" id="staff-sub"></p>
+  <div id="staff-list"></div>
+  <p class="total" id="staff-total"></p>
+</div><div class="btns"><div class="in2"><button id="staff-back"></button><button class="clear" id="staff-clear"></button></div></div></div>
+
+<script>
+const IMG = "https://www.shoya.com/.assets/";
+const L = {
+  lang:"en", font:"Noto Serif JP", title:"Risho Main Store Menu",
+  note:"Proposal mockup — not an official page. 提案用の試作です（公式ページではありません）",
+  kicker:"MENU", h1:"Risho Main Store",
+  intro:"All prices include tax. Each dish also shows its Japanese name — feel free to point to it when ordering.",
+  food:"FOOD MENU", drink:"DRINK MENU", drinksNav:"Drinks",
+  footer:"Yakiniku Shoya — Risho Main Store · Prices include tax · Menu items and prices may change.",
+  rec:"Our recommendation", recExplain:"This mark shows our recommendations.", recLegend:"Our recommendation", lim:"Limited", bottle:"bottle", taxIncl:"tax incl.", pairs:"Pairs with", grapes:"Grapes", aromas:"Aromas",
+};
+// i: [name, Japanese name, price(s), description, flags]
+// flags: r = recommended, l = limited quantity
+const FOOD = [
+  {id:"special", title:"Risho's Special Dishes", sub:"李昇 本館の逸品", lead:"Our chef's top picks — a great introduction to Risho's signature dishes.", items:[
+    ["Aka & Raw Sea Urchin","うに赤","¥2,288","Charcoal-seared lean beef prepared yukhoe-style, crowned with fresh raw sea urchin."],
+    ["Special Beef Tongue","特選タン","¥4,048","Tender, thick-cut slices from a rare, fresh Japanese Black Wagyu tongue — only a small amount comes from each tongue."],
+    ["Special Sirloin with Wasabi","特選ロースのわさび焼き","¥3,168","Topped with plenty of freshly grated real wasabi. Enjoy with a touch of soy sauce."],
+    ["Wagyu Tenderloin Steak","和牛ヒレステーキ","¥5,038","A rare cut — only a tiny amount comes from each animal."],
+    ["Wagyu Kuri (Shoulder Clod)","和牛クリ","¥2,728","Lean meat with little fat and a deep, rich flavor. Named for its chestnut (kuri) shape."],
+    ["Wagyu Misuji (Oyster Blade)","和牛ミスジ","¥2,728","From the inside of the shoulder. Its melt-in-your-mouth texture makes it the “King of Lean.”"],
+    ["Aka & Raw Sea Urchin Bowl","うにちらし","¥2,508","Our Uni-Aka piled over rice. Pure bliss in a bowl."],
+    ["Shoya's Smooth Pudding","昇家なめらかプリン","¥660","Even smoother than our signature pudding — a must-try."],
+  ]},
+  {id:"course", title:"Course Menu", sub:"宴 · Utage", lead:"Treat yourself to a blissful meat feast — Risho's set courses.", course:true, caution:"Courses are for 2 or more guests, and everyone at the table orders the same course.", items:[
+    ["Course A","Aコース","¥7,700","",0,["Assorted kimchi","Salad","Signature green-onion salad","Salted beef tongue with green onion","2 kinds of salted offal","Special Wagyu with wasabi","3 rare lean cuts with tare sauce","Pure-breed Nagoya Cochin chicken","Stone-pot bibimbap","Shoya smooth pudding"]],
+    ["Course B","Bコース","¥9,900","","r",["Assorted kimchi","Salad","Lean beef yukhoe","Special tongue platter","2 kinds of salted offal","Sea urchin & sirloin","Premium sirloin","4 special lean cuts with tare sauce","Stone-pot bibimbap","Shoya smooth pudding"]],
+    ["Premium Course","Premiumコース","¥14,300","",0,["Assorted kimchi","Salad","Beef tripe sashimi","Special tongue platter","2 kinds of salted offal","Sea urchin & sirloin","Special Wagyu with wasabi","Special tenderloin","3 special cuts with tare sauce","Stone-pot bibimbap","Shoya smooth pudding"]],
+    ["Chef's Choice Course","おまかせコース","from ¥16,500","Please ask our staff for details."],
+  ], addon:"All-you-can-drink (90 minutes): add to any course for +¥2,750. Not every drink on this menu is included — we will bring you a separate all-you-can-drink menu."},
+  {id:"sashimi", title:"Sashimi", sub:"刺身", items:[
+    ["Sliced Raw Beef Tripe","ミノ刺し","¥1,188","Refreshing beef tripe with an outstanding texture."],
+    ["Raw Beef Omasum","センマイ刺し","¥1,188","Cut using our signature technique to bring out its flavor. Enjoy with our homemade vinegared miso sauce."],
+    ["Aka Beef Yukhoe","赤身ユッケ","¥1,518","Lean beef seared over charcoal and prepared yukhoe-style."],
+    ["Toro Aka","トロ赤","¥1,518","Beef seasoned with a Japanese-style sauce. Wrap it in shiso leaf and daikon radish to eat.","r"],
+    ["Raw Beef Tongue with Egg Yolk","玉タン刺し","¥1,848","Rare Japanese beef tongue, mixed with egg and served with our special soy sauce."],
+  ]},
+  {id:"sushi", title:"Sushi", sub:"寿司", items:[
+    ["Seared Sushi, 2 pieces (rare lean Wagyu)","炙り寿司 2貫盛り（希少赤身使用）","¥1,188","Served on rice seasoned especially for lean beef. Add plenty of freshly grated real wasabi and enjoy with green onion sprouts.","r"],
+  ], photos:[["food_aburisushi.webp","Seared Sushi (2 pieces)"]]},
+  {id:"vegetables", title:"Raw Vegetables", sub:"生野菜", items:[
+    ["Signature Green Onion Salad","名物ネギ盛","¥792","Crisp green onion dressed generously with fragrant sesame oil.","r"],
+    ["Korean Lettuce (Sangchu)","サンチュ","¥748","A yakiniku classic — wrap your grilled meat in it."],
+    ["Risho's Salad – White","李昇サラダ 白","¥858","Fresh vegetables with our homemade grated-yam (tororo) dressing."],
+    ["Risho's Salad – Seaweed","李昇サラダ 海苔","¥913","A savory salt-seasoned salad loaded with Korean seaweed and toasted sesame oil — perfect with drinks."],
+  ], photos:[["food_negimori.webp","Signature Green Onion Salad"]]},
+  {id:"pickles", title:"Kimchi & Namul", sub:"漬物 · Tsukemono", items:[
+    ["Kimchi / Radish Kimchi / Cucumber Kimchi","キムチ／カクテキ／オイキムチ","each ¥638","The secret of their popularity: just the right heat, with deep, layered flavor."],
+    ["Assorted Kimchi","キムチ盛り合わせ","¥1,078","A platter of three carefully prepared varieties of kimchi.","r"],
+    ["Assorted Namul","ナムル盛り合わせ","¥858","Seasoned vegetable side dishes with addictive textures. Also available individually."],
+  ]},
+  {id:"shio", title:"Salt-Seasoned", sub:"塩 · Shio", items:[
+    ["Signature Salted Beef Abomasum (Horumon)","名物塩ホルモン","¥1,078","Our specialty since the day we opened — offal like nowhere else.","r"],
+    ["Fresh Salted Beef Tongue with Green Onion","ネギ生塩タン","¥2,178","We check the quality of every tongue and cut each slice carefully by hand."],
+    ["Special Beef Tongue","特選タン","1 slice ¥968<br>¥4,048","Tender, thick-cut slices from a rare, fresh Japanese Black Wagyu tongue — only a small amount comes from each tongue.","l"],
+    ["Fresh Salted Tongue Underside (Tan-Ago)","生塩タンアゴ","¥1,848","A crunchy texture and overflowing flavor — so good your jaw will drop.","l"],
+    ["Salted Beef Tripe","塩ミノ","¥1,848","Fine tripe, carefully sliced thin. Sear it quickly and enjoy."],
+    ["Special Salted Kalbi","特選塩カルビ","1 slice ¥682<br>¥2,728","Tender meat and flavorful fat — both of the finest quality."],
+    ["Special Salted Sirloin","特選塩ロース","1 slice ¥737<br>¥2,838","Seasoned simply with salt and pepper so you can enjoy the meat's natural flavor."],
+    ["Special Salted Outside Skirt (Harami)","特選塩ハラミ","1 slice ¥792<br>¥3,498","Rare beef diaphragm. Juicy flavor fills your mouth with every bite.","l"],
+    ["Pure-breed Nagoya Cochin Chicken with Salt","純系名古屋コーチン塩焼き","¥2,068","Nagoya's pride: purebred Nagoya Cochin chicken."],
+  ], photos:[["food_shio-horumon.webp","Signature Salted Beef Abomasum (Horumon)"],["food_shio-mino.webp","Salted Beef Tripe"]]},
+  {id:"wasabi", title:"Fresh Wasabi", sub:"生わさび · Nama-Wasabi", items:[
+    ["Special Kalbi with Wasabi","特選カルビのわさび焼き","¥3,058","Just the right amount of fat — a perfect match for aromatic fresh wasabi."],
+    ["Special Sirloin with Wasabi","特選ロースのわさび焼き","¥3,168","Topped with plenty of freshly grated real wasabi. Enjoy with a touch of soy sauce.","r"],
+    ["Special Outside Skirt with Wasabi","特選ハラミのわさび焼き","¥3,828","Premium skirt steak eaten with fresh real wasabi — truly blissful.","l"],
+  ], photos:[["food_tokusen-loin-wasabiyaki.webp","Special Sirloin with Wasabi"]]},
+  {id:"steak", title:"Steak", sub:"ステーキ", items:[
+    ["Salted Beef Tongue Steak","塩タンステーキ","¥1,958","Tender salted tongue, served boldly as a steak."],
+    ["Rib Eye Steak","リブ芯ステーキ","¥2,948","Only the prized center cut of premium rib roast.","r"],
+    ["Wagyu Tenderloin Steak","和牛ヒレステーキ","¥5,038","A rare cut — only a tiny amount comes from each animal."],
+  ], photos:[["food_rib-steak.webp","Rib Eye Steak"]]},
+  {id:"tare", title:"Sauce-Marinated", sub:"たれ · Tare", items:[
+    ["Wagyu Kalbi","和牛カルビ","¥2,068","Melts in your mouth. Contains B vitamins."],
+    ["Wagyu Rosu (Lean Cut)","和牛ロース","¥2,068","Very tender, lean Japanese Black Wagyu, rich in vitamins and minerals."],
+    ["Special Kalbi","特選カルビ","1 slice ¥682<br>¥2,728","The king of yakiniku."],
+    ["Special Sirloin","特選ロース","1 slice ¥737<br>¥2,838","Rich and full-bodied — sweet Wagyu fat perfectly blended with savory meat."],
+    ["Special Outside Skirt (Harami)","特選ハラミ","1 slice ¥792<br>¥3,498","Thick-cut and luxurious, with a rich flavor and texture you'll savor.","rl"],
+    ["Special Tenderloin","特選ヒレ","¥4,488","Ultra-premium lean meat with very little fat."],
+  ], photos:[["food_tokusen-harami.webp","Special Outside Skirt"]]},
+  {id:"lean", title:"Rare Lean Wagyu", sub:"希少赤身 · Limited quantity", items:[
+    ["Wagyu Kuri (Shoulder Clod)","和牛クリ","¥2,728","Lean meat with little fat and a deep, rich flavor. Named for its chestnut (kuri) shape.","rl"],
+    ["Wagyu Togarashi (Chuck Tender)","和牛トウガラシ","¥2,728","Light yet delicious lean meat. Named for its chili-pepper (togarashi) shape.","rl"],
+    ["Wagyu Shinshin (Knuckle Heart)","和牛シンシン","¥2,728","The center of the round. Moist, tender and full of flavor — a rare cut.","rl"],
+    ["Wagyu Ichibo (Rump Cap)","和牛イチボ","¥2,728","A rare cut from the rump, with beautiful, well-balanced marbling.","rl"],
+    ["Wagyu Tomosankaku (Tri-Tip)","和牛トモサンカク","¥2,728","Called the “premium kalbi” of the round — the best fat balance of any round cut.","rl"],
+    ["Wagyu Misuji (Oyster Blade)","和牛ミスジ","¥2,728","From the inside of the shoulder. Its melt-in-your-mouth texture makes it the “King of Lean.”","rl"],
+  ], photos:[["food_tomosankaku.webp","Wagyu Tomosankaku"]]},
+  {id:"uniku", title:"Uniku (Sea Urchin + Beef)", sub:"うにく", items:[
+    ["Special Sirloin & Raw Sea Urchin","うにロース","1 piece ¥2,090","Quickly sear the special sirloin, then wrap it with raw sea urchin, toasted nori and a shiso leaf.","r"],
+    ["Aka & Raw Sea Urchin","うに赤","¥2,288","Charcoal-seared lean beef prepared yukhoe-style, crowned with fresh raw sea urchin."],
+  ], photos:[["food_uniloin.webp","Special Sirloin & Raw Sea Urchin"],["food_uniaka.webp","Aka & Raw Sea Urchin"]]},
+  {id:"liver", title:"Fresh Liver", sub:"新鮮レバー", caution:"Liver must always be fully grilled before eating.", items:[
+    ["Special Beef Liver","特選レバー","¥1,848","Our popular liver, chosen for its freshness — it always sells out.","rl"],
+    ["Beef Liver with Sauce","焼きレバー","¥1,078","Rich, addictive flavor, packed with vitamins and nutrients."],
+  ], photos:[["food_tokusen-liver.webp","Special Beef Liver"]]},
+  {id:"miso", title:"Miso-Marinated", sub:"味噌 · Miso", items:[
+    ["Beef Abomasum (Giara)","ギアラ","¥1,078","Subtly sweet fat with an addictive chew.","r"],
+    ["Premium Beef Tripe (Jo-Mino)","上ミノ","¥1,518","Wagyu's first stomach, carefully scored so flavor bursts out with every bite."],
+    ["Premium Beef Large Intestine (Jo-Horumon)","上ホルモン","¥1,078","Known as “tecchan.” Be careful not to overcook."],
+    ["Premium Beef Small Intestine with Fat","上ホルモン脂付き","¥968","You'll fall for the rich fat. Watch out for the smoke!"],
+  ], photos:[["food_jouhorumon.webp","Premium Beef Large Intestine"]]},
+  {id:"sausage", title:"Sausage", sub:"ソーセージ", items:[
+    ["Risho's Homemade Beef Tongue Sausage (4)","李昇自家製牛タンソーセージ（4本）","¥968","Homemade coarse-ground sausage of beef tongue and carefully selected pork.","r"],
+  ]},
+  {id:"grilled-veg", title:"Grilled Vegetables", sub:"焼野菜", items:[
+    ["Grilled Yam with Plum-Miso & Korean Seaweed","長芋の梅味噌焼 韓国海苔添え","¥858","Charcoal-grilled Chinese yam, wrapped in our homemade plum miso and Korean seaweed.","r"],
+    ["Assorted Grilled Vegetables & Mushrooms","焼き野菜ときのこの盛り合わせ","¥902","A well-balanced mix of vegetables and mushrooms."],
+  ], photos:[["food_nagaimo.webp","Grilled Yam with Plum-Miso"]]},
+  {id:"rice", title:"Rice", sub:"飯 · Meshi", items:[
+    ["Bibimbap","ビビンバ","¥1,188","Rice topped with an assortment of our namul (seasoned vegetables), full of vegetable goodness."],
+    ["Beef Tail Rice Soup – White","テールクッパ 白","¥1,408","A rich, salt-based rice porridge that brings out the oxtail broth."],
+    ["Beef Tail Rice Soup – Red","テールクッパ 赤","¥1,518","Spicy and nourishing — warms you to the core."],
+    ["Beef Tail Rice Soup – Seaweed","テールクッパ 海苔","¥1,518","Fragrant toasted Korean seaweed and chopped green onion whet your appetite.","r"],
+    ["Grilled Rice Balls (2)","焼おにぎり（2個）","¥550","Already grilled for you. For a crispier crust, toast them a little more on your charcoal grill."],
+    ["Rice with Shiso","しそご飯","L ¥660 / M ¥550 / S ¥440","You won't be able to put your chopsticks down — shiso and ground sesame rice."],
+    ["Steamed Rice","ご飯","L ¥484 / M ¥363 / S ¥242","Exceptionally tasty rice from select partner farms."],
+    ["Korean Seaweed","韓国海苔","¥396","Toasted seaweed seasoned with sesame oil and salt."],
+  ]},
+  {id:"ishiyaki", title:"Stone-Pot Rice", sub:"石焼 · Ishiyaki", items:[
+    ["Stone-Pot Bibimbap","石焼きビビンバ","¥1,408","Our No.1 most popular dish. Enjoy it sizzling hot."],
+    ["Stone-Pot Garlic Rice","石焼きガーリックライス","¥1,298","Garlic rice packed with Wagyu beef."],
+  ], photos:[["food_ishiyaki-bibimba.webp","Stone-Pot Bibimbap"]]},
+  {id:"unimeshi", title:"Sea Urchin Rice", sub:"うに飯 · Unimeshi", items:[
+    ["Aka & Raw Sea Urchin Bowl","うにちらし","¥2,508","Our Uni-Aka piled over rice. Pure bliss in a bowl.","r"],
+  ], photos:[["food_uni-chirashi.webp","Aka & Raw Sea Urchin Bowl"]]},
+  {id:"soup", title:"Soup", sub:"汁 · Shiru", items:[
+    ["Egg Drop Soup","玉子スープ","¥968","Fluffy egg with a gentle hint of sesame oil."],
+    ["Beef Tail Soup – White","テールスープ 白","¥1,298","Salt-based oxtail soup, slowly simmered for six hours. Exceptional."],
+    ["Beef Tail Soup – Red","テールスープ 赤","¥1,408","Shoya's classic soup to finish your meal.","r"],
+  ], photos:[["food_tailsoup-red.webp","Beef Tail Soup – Red"]]},
+  {id:"noodles", title:"Noodles", sub:"麺", items:[
+    ["Risho-style Green Onion Noodles","李昇流“ネギそば”","¥1,298","A double soup of oxtail broth and bonito broth, topped with a mound of finely shredded leek. Deep and rich.","r"],
+    ["Risho-style Cold Noodles (Naengmyeon)","李昇流“冷麺”","¥1,188","A carefully prepared broth so addictive you'll want to drink every drop."],
+  ], photos:[["food_negisoba.webp","Risho-style Green Onion Noodles"]]},
+  {id:"dessert", title:"Desserts", sub:"菓子 · Kashi", lead:"All handmade, so quantities are limited.", items:[
+    ["Signature Shoya Pudding","名物 昇家プリン","¥660","Made with Nagoya Cochin eggs and baked one by one with care — our masterpiece.","r"],
+    ["Shoya's Smooth Pudding","昇家なめらかプリン","¥660","Even smoother than our signature pudding — a must-try."],
+    ["No-Bake Cheesecake","レアチーズケーキ","¥660","A moist no-bake cheesecake finished with blueberry sauce."],
+    ["Soft Caramel Ice Cream","生キャラメルアイス","¥660","Cold gelato topped with piping-hot soft caramel."],
+    ["Fresh Tiramisu","生ティラミス","¥770","A luxurious treat made with plenty of mascarpone."],
+    ["Shoya Pudding to Go","お持ち帰り昇家プリン","2 pcs ¥1,512<br>4 pcs ¥3,024","The pudding featured on Japanese TV souvenir shows. Available for takeaway — just ask our staff."],
+  ]},
+];
+
+const DRINK = [
+  {id:"beer", title:"Beer", sub:"ビール", items:[
+    ["Draft Beer (The Premium Malt's)","生ビール（プレミアムモルツ）","¥803"],
+    ["Bottled Beer","瓶ビール","¥913","Various brands available."],
+    ["Non-Alcoholic Beer (All-Free)","ノンアルコールビール（オールフリー）","¥660"],
+  ]},
+  {id:"tea-hi", title:"Shochu & Tea", sub:"お茶ハイ · Tea-Hi", items:[
+    ["Shochu with Oolong Tea","ウーロンハイ","¥770"],["Shochu with Black Oolong Tea","黒ウーロンハイ","¥770"],
+    ["Shochu with Corn Tea","コーン茶ハイ","¥770"],["Shochu with Green Tea","緑茶ハイ","¥770"],
+  ]},
+  {id:"chu-hi", title:"Chu-Hi", sub:"酎ハイ", items:[
+    ["Fresh Lemon Sour","生レモンハイ","¥858"],["Fresh Orange Sour","生オレンジハイ","¥858"],["Calpis Sour","カルピスハイ","¥770"],
+  ]},
+  {id:"fruit", title:"Fruit Liqueur", sub:"果実酒", items:[
+    ["Pulpy Umeshu (Plum Wine)","あらごし梅酒","¥858"],["Pulpy Yuzu Liqueur","あらごし柚子","¥858"],["Shine Muscat Liqueur","シャインマスカット","¥858"],
+  ]},
+  {id:"whisky", title:"Whisky", sub:"ウイスキー", items:[
+    ["Chita","知多","¥1,100"],["Yamazaki NV","山崎NV","¥1,430"],["Hakushu NV","白州NV","¥1,430"],["Ballantine's","バランタイン","¥1,430"],
+  ]},
+  {id:"makgeolli", title:"Makgeolli", sub:"マッコリ", items:[
+    ["Handmade Fresh Makgeolli “Tora”","幻の手作り生マッコリ虎","Bottle ¥3,630","A rare handmade, unpasteurized makgeolli."],
+  ]},
+  {id:"sake", title:"Sake", sub:"日本酒", lead:"Hot sake also available.", items:[
+    ["Dassai Junmai Daiginjo (Yamaguchi)","獺祭 純米大吟醸【山口】","180 ml (1 go) ¥1,518"],
+    ["Chitei no Shinpi Daiginjo (Akita)","地底の神秘 大吟醸【秋田】","180 ml (1 go) ¥1,628"],
+  ]},
+  {id:"shochu", title:"Shochu", sub:"焼酎 · Sweet potato / Barley / Rice", items:[
+    ["Daiyame (sweet potato)","だいやめ","Glass ¥682<br>Bottle ¥4,180"],
+    ["Ikkomon (sweet potato)","一刻者","Glass ¥737<br>Bottle ¥4,400"],
+    ["Hitotsubu no Mugi (barley)","一粒の麦","Glass ¥792<br>Bottle ¥4,620"],
+    ["Nakanaka (barley)","中々","Glass ¥792<br>Bottle ¥4,620"],
+    ["Batsugun (rice)","ばつぐん","Glass ¥682<br>Bottle ¥4,180"],
+  ]},
+  {id:"bottle-set", title:"Bottle Set", sub:"ボトルセット", items:[
+    ["Oolong Tea","ウーロン茶","¥660"],["Soda","炭酸","¥660"],["Green Tea","緑茶","¥660"],
+    ["Pickled Plums (6)","梅干し（6個）","¥352"],["Lemon Wedges (6)","カットレモン（6個）","¥352"],
+  ]},
+  {id:"soft", title:"Soft Drinks", sub:"ソフトドリンク", items:[
+    ["Oolong Tea / Black Oolong Tea / Green Tea / Corn Tea / Calpis / Cola / Ginger Ale / Orange Juice / Grapefruit Juice / Apple Juice","ウーロン茶／黒ウーロン茶／緑茶／コーン茶／カルピス／コーラ／ジンジャーエール／オレンジ／グレープフルーツ／りんご","each ¥550"],
+  ]},
+  {id:"red-wine", title:"Red Wine", sub:"赤ワイン", wine:true, items:[
+    ["Casillero del Diablo Reserva Privada Cabernet Sauvignon","カッシェロ・デル・ディアブロ レセルバ・プリバダ カベルネ・ソーヴィニヨン","¥6,050","Elegant blackcurrant aromas with dark-fruit notes of cherry and plum, plus complex vanilla and cedar from French oak. A full-bodied red.",
+      {o:"Chile, Maipo Valley · Full-bodied",p:"Wagyu Kalbi and Wagyu Rosu, both sauce-marinated",g:"Cabernet Sauvignon 85%, Shiraz 9%, Cabernet Franc 6%",a:"Vanilla, blackberry, oak"}],
+    ["Trivento Golden Reserve Malbec","トリヴェント ゴールデン・リザーブ マルベック","¥9,350","Powerful, fresh aromas of cherry and strawberry with well-balanced oak. A full-bodied red.",
+      {o:"Argentina, Cuyo · Full-bodied",p:"Special Salted Kalbi, Special Salted Sirloin",g:"Malbec 85%, others 15%",a:"Strawberry, blueberry, oak"}],
+    ["Robert Mondavi Private Selection Vint Central Coast Cabernet Sauvignon","ロバート・モンダヴィ プライベート・セレクション ヴィント セントラル・コースト カベルネ・ソーヴィニヨン","¥7,150","Built on dark fruit, with red-fruit nuances from the cool Pacific coastal climate. Elegant and complex.",
+      {o:"USA, California / Central Coast · Full-bodied",p:"Special Sirloin with Wasabi, sauce-marinated Wagyu Rosu",g:"Cabernet Sauvignon 86%, Malbec 11%, Petit Verdot 1%, others 2%",a:"Raspberry, toast, coffee"}],
+    ["Chateau Mercian Mariko Syrah","シャトー・メルシャン 椀子シラー","¥13,200","From the winery's own Mariko Vineyard in Ueda, Nagano — the only Japanese vineyard ranked in the World's Best Vineyards for five consecutive years through 2024. Pleasant acidity in harmony with ripe fruit.",
+      {o:"Japan, Nagano / Mariko Vineyard, Ueda · Full-bodied",p:"Special Kalbi with Wasabi, Risho's Homemade Beef Tongue Sausage",g:"Syrah 100%",a:"White pepper, cassis, bitter chocolate"}],
+    ["Chateau Mercian Hokushin Cabernet Sauvignon","シャトー・メルシャン 北信カベルネ・ソーヴィニヨン","¥19,800","Deep garnet in color, with aromas of ripe blackberry and cassis and hints of red raspberry.",
+      {o:"Japan, Nagano / Hokushin · Full-bodied",p:"Wagyu Ichibo (Rump Cap), Special Sirloin with Wasabi",g:"Cabernet Sauvignon 87%, Merlot 13%",a:"Blackberry, cassis, chocolate"}],
+    ["Kenzo Estate “rindo”","ケンゾーエステート 紫鈴リンドウ","¥27,500","Both power and finesse on the first sip, followed by refined acidity and fine, fresh tannins that coat the palate like silk, opening into gentle, generous fruit.",
+      {o:"USA, California · Full-bodied",p:"Wagyu Tenderloin Steak, Special Beef Liver",g:"Cabernet Sauvignon 62%, Merlot 22%, Petit Verdot 9%, Cabernet Franc 4%, Malbec 3%",a:"Black cherry, plum, raisin"}],
+    ["Trivento Eolo Malbec","トリヴェント エオロ マルベック","¥68,200","Trivento's flagship and one of the world's finest Malbecs. Made only from the year's best grapes, berry-sorted from a 4-hectare plot planted over 100 years ago. Concentrated yet elegant.",
+      {o:"Argentina, Mendoza / Luján de Cuyo · Full-bodied",p:"Wagyu Tenderloin Steak, Special Beef Liver",g:"Malbec 100%",a:"Raspberry, violet, blackberry"}],
+    ["Opus One","オーパスワン","¥154,000","A joint creation of Baron Philippe de Rothschild and Robert Mondavi. Beautifully balanced, silky tannins and fresh acidity give a soft, creamy texture.",
+      {o:"USA, California · Full-bodied",p:"Wagyu Tenderloin Steak, Rib Eye Steak",g:"Cabernet Sauvignon 84%, Petit Verdot 6%, Merlot 5%, Cabernet Franc 4%, Malbec 1%",a:"Cassis, violet, dark chocolate"}],
+  ]},
+  {id:"white-wine", title:"White Wine", sub:"白ワイン", wine:true, items:[
+    ["Chateau Mercian Hokushin Chardonnay","シャトー・メルシャン 北信シャルドネ","¥8,800","Gentle acidity and fruit-driven roundness give the volume and flavor typical of Chardonnay. A dry white.",
+      {o:"Japan, Nagano / Hokushin · Dry",p:"Special Sirloin with Wasabi, Seared Sushi, 2 pieces (rare lean Wagyu)",g:"Chardonnay 100%",a:"Tropical fruit, butter, nuts"}],
+    ["Kenzo Estate “asatsuyu”","ケンゾーエステート あさつゆ","¥24,200","Lively acidity and a bright, refreshing feel, with concentrated fresh fruit and a full body. A long, rich finish leaves the palate cool and clean.",
+      {o:"USA, California · Dry",p:"Special Beef Tongue (salt-seasoned), Assorted Grilled Vegetables & Mushrooms",g:"Sauvignon Blanc 90%, Sémillon 10%",a:"Citrus, lime, white peach"}],
+  ]},
+  {id:"champagne", title:"Champagne", sub:"シャンパン", wine:true, items:[
+    ["Champagne Piper-Heidsieck Brut","シャンパーニュ パイパー・エドシック ブリュット","¥13,200","The champagne presented to Queen Marie Antoinette and loved by Marilyn Monroe. Smooth, balanced and fruity — elegant and alluring.",
+      {o:"France, Champagne · Dry",p:"Whole-Slice Grilled Sirloin, Special Outside Skirt (Harami)",g:"Mainly Pinot Noir, with Meunier and Chardonnay",a:"Pear, apple, almond"}],
+    ["Champagne Charles Heidsieck Brut Réserve","シャンパーニュ シャルル・エドシック ブリュット レゼルヴ","¥18,700","Gold medal at the 1859 Bordeaux Exposition, and chosen by Eisenhower, Churchill and Dalí to entertain guests. Endless fine bubbles and remarkably complex, appetizing aromas.",
+      {o:"France, Champagne · Dry",p:"Seared Sushi, 2 pieces (rare lean Wagyu), Whole-Slice Grilled Sirloin, Special Outside Skirt (Harami)",g:"Chardonnay 40%, Pinot Noir 40%, Meunier 20%",a:"Mango, apricot, pistachio"}],
+  ]},
+  {id:"glass-wine", title:"Wine by the Glass", sub:"グラスワイン", items:[
+    ["Glass of Sparkling Wine","グラススパークリング","¥1,078"],
+    ["Glass of Red / White Wine","グラスワイン 赤／白","each ¥968"],
+  ]},
+];
+
+// Extra text for the new design, added on top of src/en-data.js (L, FOOD, DRINK).
+Object.assign(L, {
+  howtoTitle: "How to enjoy yakiniku",
+  howto: [
+    "Grill each piece yourself and eat it hot from the grill.",
+    "Japanese yakiniku is all about the flavor of the meat. Each dish is already seasoned with salt, tare sauce or miso — after grilling, add lemon sauce, tare sauce or salt & pepper to your taste.",
+    "We recommend going in this order: salt-seasoned dishes first, then tare, then miso.",
+  ],
+  legendText: "This mark shows our recommendations. · All prices include tax.",
+  feature: {shio: {
+    h: "Start with beef tongue — don't miss it.",
+    p: "Salted beef tongue is the classic of Japanese yakiniku, and the first dish most Japanese diners order. Surprisingly juicy and clean-tasting, with a light, crisp bite — that is the true appeal of tongue at a Japanese yakiniku restaurant.",
+  }},
+  notes: {
+    wasabi: "Rich, marbled Wagyu with fresh wasabi and soy sauce — two staples of Japanese food, and a uniquely Japanese way to enjoy it. Put the wasabi straight on the meat, or mix it into soy sauce to make wasabi-joyu. Its clean heat cuts through the richness, and the soy brings out the sweetness of the meat.",
+    tare: "Japanese yakiniku tare is a sweet-savory, soy-based sauce. Every restaurant has its own recipe — it is the signature of the house. Ours is made in-house: the signature flavor of Risho, loved by our guests for many years.",
+    lean: "Wagyu is famous for its marbling, but its rare lean cuts — only a small amount comes from each animal — each have a character of their own. We offer six of them. Try them side by side: each has its own flavor, marbling and texture.",
+    miso: "Nagoya is a city of miso, and horumon (offal) with miso sauce is a local classic. Our miso sauce is also made in-house — a long-loved house favorite.",
+  },
+  leads: {special: "These are Risho's signature dishes. If you can't decide, choose from here."},
+  photo: "Photo:",
+  min2: "Min. 2 slices",
+  pcs: n => n === 1 ? "1 piece" : `${n} pcs`, vary: " (varies with the cut)", thin: "Thin-sliced", thick: "Thick-cut",
+  nav: "Menu", food: "Food", drink: "Drinks",
+  // order list
+  howOrderTitle: "How to order",
+  notMobile: "This is NOT a mobile order. Adding dishes does not send your order to the kitchen.",
+  notSent: "Your order has NOT been sent yet.",
+  orderAlt: "You can also order by simply telling our staff, as usual. Using this list just makes ordering quicker and smoother.",
+  barNote: "Not sent yet — please show to staff",
+  howOrder: [
+    "Tap “+ Add” on the dishes you'd like. Your list stays at the bottom of the screen.",
+    "When you're ready, please call a staff member.",
+    "Tap “Show to staff” and show them the screen — we'll take your order from it.",
+  ],
+  add: "+ Add", plate: "1 plate", bySlice: "By the slice", sizes: {L: "Large", M: "Medium", S: "Small"},
+  inList: n => `My order · ${n} item${n === 1 ? "" : "s"}`, showStaff: "Show to staff",
+  staffTitle: "Please show this to our staff",
+  staffSub: "Our staff will enter your order from this screen.",
+  back: "Back to menu", clear: "Clear all", clearAsk: "Clear your whole order list?",
+  empty: "Your list is empty.", total: "Estimated total (tax incl.)",
+  totalNote: "For reference only. Your bill may differ.",
+});
+// Descriptions rewritten for the new design (key: Japanese name)
+const DESC = {
+  "うに赤": "Charcoal-seared lean beef prepared yukhoe-style, crowned with fresh raw sea urchin. Wrap it in nori (seaweed) to eat.",
+  "赤身ユッケ": "Lean beef seared over charcoal and prepared yukhoe-style. Wrap it in nori (seaweed) to eat.",
+  "生塩タンアゴ": "“Ago” means “jaw” in Japanese: a prized cut from under the tongue, near the jaw. Crunchy and packed with flavor — truly jaw-dropping.",
+};
+// Photo captions: the exact menu name of the dish in each photo (key: image file)
+const PHOTO = {
+  "food_aburisushi.webp": "Seared Sushi, 2 pieces (rare lean Wagyu)",
+  "food_negimori.webp": "Signature Green Onion Salad",
+  "food_shio-horumon.webp": "Signature Salted Beef Abomasum (Horumon)",
+  "food_shio-mino.webp": "Salted Beef Tripe",
+  "food_tokusen-loin-wasabiyaki.webp": "Special Sirloin with Wasabi",
+  "food_rib-steak.webp": "Rib Eye Steak",
+  "food_tokusen-harami.webp": "Special Outside Skirt (Harami)",
+  "food_tomosankaku.webp": "Wagyu Tomosankaku (Tri-Tip)",
+  "food_uniloin.webp": "Special Sirloin & Raw Sea Urchin",
+  "food_uniaka.webp": "Aka & Raw Sea Urchin",
+  "food_tokusen-liver.webp": "Special Beef Liver",
+  "food_jouhorumon.webp": "Premium Beef Large Intestine (Jo-Horumon)",
+  "food_nagaimo.webp": "Grilled Yam with Plum-Miso",
+  "food_ishiyaki-bibimba.webp": "Stone-Pot Bibimbap",
+  "food_uni-chirashi.webp": "Aka & Raw Sea Urchin Bowl",
+  "food_tailsoup-red.webp": "Beef Tail Soup – Red",
+  "food_negisoba.webp": "Risho-style Green Onion Noodles",
+};
+
+// How a drink is served (fruit liqueur, shochu, whisky): shown on every menu,
+// and on the order-list version the guest picks one when adding a glass.
+const STYLED = {fruit: "std", shochu: "std", whisky: "whisky"};  // section id -> set of styles
+const STYLE_SETS = {std: ["rock", "water", "hot", "soda"], whisky: ["rock", "water", "hot", "highball"]};
+const STYLE_TEXT = {
+  en: {title: "How would you like it?", rock: "On the rocks", water: "With water", hot: "With hot water", soda: "With soda", highball: "Highball",
+       bottleHint: "For a bottle, mixers are on the", bottleSet: "Bottle Set"},
+  ja: {title: "飲み方", rock: "ロック", water: "水割り", hot: "お湯割り", soda: "ソーダ割り", highball: "ハイボール",
+       bottleHint: "ボトルの割り材は", bottleSet: "ボトルセット"},
+  "zh-Hans": {title: "饮用方式", rock: "加冰", water: "兑水", hot: "兑热水", soda: "兑苏打水", highball: "嗨棒（兑苏打水）"},
+  ko: {title: "드시는 방법", rock: "온더록", water: "물 타서", hot: "뜨거운 물 타서", soda: "소다 타서", highball: "하이볼"},
+};
+const ST = STYLE_TEXT[L.lang] || STYLE_TEXT.en;
+const STAFF_STYLE = STYLE_TEXT.ja;  // the staff screen is always in Japanese
+const stylesOf = sec => (STYLE_SETS[STYLED[sec.id]] || []);
+const styleLine = sec => stylesOf(sec).map(k => ST[k]).join(" / ");
+
+// Grilling notes shared by every language, keyed by the official Japanese name.
+// pcs: pieces per plate — number or range string; null = not confirmed yet (hidden); false = no count (mixed plate)
+// vary: count changes with the size/quality of the meat that day
+// Counts confirmed by the user on 2026-10-31.
+// cut: "thin" | "thick" | ""   tip: grilling cue per language
+// ALL TIPS ARE DRAFTS — check each one with the manager before use.
+const NOTES = {
+  // 塩
+  "名物塩ホルモン": {pcs:null, cut:"", en:"Grill until the edges curl and turn lightly golden.", ja:"縁が反り、軽くきつね色になったら食べごろです。"},
+  "ネギ生塩タン": {pcs:6, cut:"thin", en:"Flip when the edges turn pale and start to curl.", ja:"縁が白っぽくなり、反り返ってきたら裏返します。"},
+  "特選タン": {pcs:5, cut:"thick", en:"Sear both sides, then finish at the edge until juices bead on top.", ja:"両面を強火で焼いてから網の端へ。表面に肉汁が浮いてきたら食べごろです。"},
+  "生塩タンアゴ": {pcs:null, cut:"", en:"Grill until lightly browned on both sides.", ja:"両面に軽く焼き色がついたら食べごろです。"},
+  "塩ミノ": {pcs:null, cut:"", en:"A quick sear on both sides is enough.", ja:"両面をサッと焼けば食べごろです。"},
+  "特選塩カルビ": {pcs:5, cut:"", en:"Flip once juices rise to the surface; best a little pink inside.", ja:"表面に肉汁が浮いてきたら裏返します。中が少し赤いくらいがおすすめです。"},
+  "特選塩ロース": {pcs:5, cut:"", en:"Flip once juices rise to the surface; best a little pink inside.", ja:"表面に肉汁が浮いてきたら裏返します。中が少し赤いくらいがおすすめです。"},
+  "特選塩ハラミ": {pcs:5, cut:"", en:"Brown both sides well; keep it juicy inside.", ja:"両面にしっかり焼き色をつけ、中はジューシーに。"},
+  "純系名古屋コーチン塩焼き": {pcs:null, cut:"", en:"Cook through until no pink remains.", ja:"中まで火が通り、赤い部分がなくなるまで焼きます。"},
+  // 生わさび
+  "特選カルビのわさび焼き": {pcs:5, cut:"", en:"Grill, then top with fresh wasabi just before eating.", ja:"焼いてから、食べる直前に生わさびをのせます。"},
+  "特選ロースのわさび焼き": {pcs:5, cut:"", en:"Grill, then top with fresh wasabi just before eating.", ja:"焼いてから、食べる直前に生わさびをのせます。"},
+  "特選ハラミのわさび焼き": {pcs:6, cut:"", en:"Grill, then top with fresh wasabi just before eating.", ja:"焼いてから、食べる直前に生わさびをのせます。"},
+  // ステーキ
+  "塩タンステーキ": {pcs:1, cut:"thick", en:"Sear both sides, then finish at the edge of the grill.", ja:"両面を強火で焼いてから、網の端で仕上げます。"},
+  "リブ芯ステーキ": {pcs:1, cut:"thick", en:"Sear both sides, then finish at the edge of the grill.", ja:"両面を強火で焼いてから、網の端で仕上げます。"},
+  "和牛ヒレステーキ": {pcs:1, cut:"thick", en:"Sear both sides, then finish at the edge of the grill.", ja:"両面を強火で焼いてから、網の端で仕上げます。"},
+  // たれ
+  "和牛カルビ": {pcs:null, cut:"", en:"Sauce burns easily — grill over a gentler part of the grill.", ja:"たれは焦げやすいので、火の弱いところで焼きます。"},
+  "和牛ロース": {pcs:null, cut:"", en:"Sauce burns easily — grill over a gentler part of the grill.", ja:"たれは焦げやすいので、火の弱いところで焼きます。"},
+  "特選カルビ": {pcs:5, cut:"", en:"Flip once juices rise to the surface; best a little pink inside.", ja:"表面に肉汁が浮いてきたら裏返します。中が少し赤いくらいがおすすめです。"},
+  "特選ロース": {pcs:5, cut:"", en:"Flip once juices rise to the surface; best a little pink inside.", ja:"表面に肉汁が浮いてきたら裏返します。中が少し赤いくらいがおすすめです。"},
+  "特選ハラミ": {pcs:5, cut:"thick", en:"Brown both sides well; keep it juicy inside.", ja:"両面にしっかり焼き色をつけ、中はジューシーに。"},
+  "特選ヒレ": {pcs:"4–5", cut:"", en:"Lean and delicate — don't overcook.", ja:"脂が少ないので、焼きすぎないように。"},
+  // 希少赤身
+  "和牛クリ": {pcs:"6–8", vary:true, cut:"", en:"Lean — sear briefly and keep it pink inside.", ja:"赤身なので、サッと焼いて中は赤みを残します。"},
+  "和牛トウガラシ": {pcs:"6–8", vary:true, cut:"", en:"Lean — sear briefly and keep it pink inside.", ja:"赤身なので、サッと焼いて中は赤みを残します。"},
+  "和牛シンシン": {pcs:"6–8", vary:true, cut:"", en:"Lean — sear briefly and keep it pink inside.", ja:"赤身なので、サッと焼いて中は赤みを残します。"},
+  "和牛イチボ": {pcs:"6–8", vary:true, cut:"", en:"Lean — sear briefly and keep it pink inside.", ja:"赤身なので、サッと焼いて中は赤みを残します。"},
+  "和牛トモサンカク": {pcs:"6–8", vary:true, cut:"", en:"Sear briefly and keep it pink inside.", ja:"サッと焼いて中は赤みを残します。"},
+  "和牛ミスジ": {pcs:"6–8", vary:true, cut:"", en:"Sear briefly and keep it pink inside.", ja:"サッと焼いて中は赤みを残します。"},
+  // うにく
+  "うにロース": {pcs:1, cut:"", en:"Sear quickly — just a few seconds per side.", ja:"片面数秒ずつ、サッと焼きます。"},
+  // レバー
+  "特選レバー": {pcs:5, cut:"", en:"Must be cooked through — grill until no red remains inside.", ja:"必ず中まで火を通し、赤い部分がなくなるまで焼きます。"},
+  "焼きレバー": {pcs:null, cut:"", en:"Must be cooked through — grill until no red remains inside.", ja:"必ず中まで火を通し、赤い部分がなくなるまで焼きます。"},
+  // 味噌
+  "ギアラ": {pcs:null, cut:"", en:"Grill until the edges curl and turn golden.", ja:"縁が反り、きつね色になったら食べごろです。"},
+  "上ミノ": {pcs:null, cut:"", en:"Grill until the scored edges open and crisp up.", ja:"切れ目が開き、縁がカリッとしたら食べごろです。"},
+  "上ホルモン": {pcs:null, cut:"", en:"Skin side down first; flip when the fat turns golden and shrinks.", ja:"皮目から焼き、脂が黄金色に縮んできたら裏返します。"},
+  "上ホルモン脂付き": {pcs:null, cut:"", en:"Skin side down first; flip when the fat turns golden and shrinks.", ja:"皮目から焼き、脂が黄金色に縮んできたら裏返します。"},
+  // ソーセージ・焼野菜
+  "李昇自家製牛タンソーセージ（4本）": {pcs:4, cut:"", en:"Roll occasionally until browned all over.", ja:"ときどき転がしながら、全体に焼き色がつくまで焼きます。"},
+  "長芋の梅味噌焼 韓国海苔添え": {pcs:6, cut:"", en:"Grill until golden on both sides.", ja:"両面がきつね色になるまで焼きます。"},
+  "焼き野菜ときのこの盛り合わせ": {pcs:false, cut:"", en:"Vegetables cook faster than meat — grill until tender.", ja:"野菜は肉より早く焼けます。柔らかくなったら食べごろです。"},
+};
+
+const ORDER = false;
+
+// courses come first on every menu
+FOOD.sort((a, b) => (b.id === "course") - (a.id === "course"));
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const recIcon = () => `<img class="rec-icon" src="${IMG}menu-recommendation.svg" alt="${esc(L.rec)}">`;
+const hasRec = sec => sec.items.some(it => typeof it[4] === "string" && it[4].includes("r"));
+
+// "1 slice ¥968<br>¥4,048" → main price large, the per-slice line small
+function priceHTML(p){
+  const parts = p.split(/<br>| \/ /);
+  if (parts.length === 2 && /^\D*¥[\d,]+$/.test(parts[1]) && !/^\D*¥[\d,]+$/.test(parts[0]))
+    return `${parts[1]}<small>${parts[0]}</small><small class="min">${esc(L.min2)}</small>`;
+  return parts.join("<br>");
+}
+
+function grillHTML(jp){
+  const n = NOTES[jp];
+  if (!n) return "";
+  const count = n.pcs == null || n.pcs === false ? "" : L.pcs(n.pcs) + (n.vary ? L.vary : "");
+  const head = [n.cut ? L[n.cut] : "", count].filter(Boolean).join(" · ");
+  return `<div class="grill">${head ? `<b>${esc(head)}</b> — ` : ""}${esc(n[L.lang] || n.en)}</div>`;
+}
+
+function itemHTML(it, sec){
+  let [name, jp, price, desc, flags, extra] = it;
+  if (flags && typeof flags === "object") [flags, extra] = ["", flags];
+  const f = typeof flags === "string" ? flags : "";
+  if (typeof DESC !== "undefined" && DESC[jp]) desc = DESC[jp];
+  let more = "";
+  if (sec.course && Array.isArray(extra))
+    more = `<ul class="contents">${extra.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+  if (sec.wine && extra && extra.o)
+    more = `<dl class="meta"><dt>${L.pairs}</dt><dd>${esc(extra.p)}</dd><dt>${L.grapes}</dt><dd>${esc(extra.g)}</dd><dt>${L.aromas}</dt><dd>${esc(extra.a)}</dd></dl>`;
+  return `<div class="item">
+    ${f.includes("l") ? `<span class="lim">${esc(L.lim)}</span>` : ""}
+    <div class="row"><h3>${f.includes("r") ? recIcon() : ""}${esc(name)}</h3>
+      <div class="price">${priceHTML(price)}${sec.wine ? `<small>${esc(L.bottle)}</small>` : ""}</div></div>
+    <div class="jp" lang="ja">${esc(jp)}</div>
+    ${sec.wine && extra && extra.o ? `<div class="origin">${esc(extra.o)}</div>` : ""}
+    ${desc ? `<p>${esc(desc)}</p>` : ""}${more}${grillHTML(jp)}${orderHTML(it, sec)}</div>`;
+}
+
+const capOf = ([file, cap]) => (typeof PHOTO !== "undefined" && PHOTO[file]) || cap;
+
+function headHTML(sec){
+  const label = `<span lang="ja">${esc(sec.sub)}</span><h2>${esc(sec.title)}</h2>`;
+  if (sec.photos && sec.photos.length)
+    return `<div class="hero"><img loading="lazy" src="${IMG + sec.photos[0][0]}" alt="${esc(sec.photos[0][1])}"><div class="label">${label}</div></div><p class="hero-cap">${esc(L.photo)} <b>${esc(capOf(sec.photos[0]))}</b></p>`;
+  return `<div class="plain">${label}</div>`;
+}
+
+function render(list, el){
+  el.innerHTML = list.map(sec => {
+    const feat = L.feature && L.feature[sec.id];
+    const more = (sec.photos || []).slice(1);
+    return `<section id="${sec.id}">
+      ${headHTML(sec)}
+      <div class="pad">
+        ${(L.leads && L.leads[sec.id]) || sec.lead ? `<p class="lead">${esc((L.leads && L.leads[sec.id]) || sec.lead)}</p>` : ""}
+        ${stylesOf(sec).length ? `<p class="styles"><b>${esc(ST.title)}</b>${esc(styleLine(sec))}</p>` : ""}
+        ${sec.caution ? `<p class="caution">${esc(sec.caution)}</p>` : ""}
+        ${L.notes && L.notes[sec.id] ? `<p class="jnote">${esc(L.notes[sec.id])}</p>` : ""}
+        ${feat ? `<div class="feature"><h3>${esc(feat.h)}</h3><p>${esc(feat.p)}</p></div>` : ""}
+        ${sec.items.map(it => itemHTML(it, sec)).join("")}
+        ${sec.addon ? `<div class="addon">${esc(sec.addon)}</div>` : ""}
+        ${more.map(([src, cap]) => `<figure class="photo"><img loading="lazy" src="${IMG + src}" alt=""><figcaption>${esc(L.photo)} <b>${esc(capOf([src, cap]))}</b></figcaption></figure>`).join("")}
+        ${hasRec(sec) ? `<p class="sec-legend">${recIcon()}${esc(L.recLegend)}</p>` : ""}
+      </div></section>`;
+  }).join("");
+}
+
+
+// ---- order list ----
+// Each dish (or each size / kind of a dish) becomes one variant with a key; the key uses the
+// official Japanese name, so a dish shown in two categories shares one count.
+const REG = {};   // key -> {staff, name, yen, min, unit, course, n}
+let regN = 0;
+const LABEL_JA = {L:"大", M:"中", S:"小", Glass:"グラス", Bottle:"ボトル", "2 pcs":"2個", "4 pcs":"4個"};
+const partsOf = price => price.split(/<br>| \/ /).map(p => {
+  const m = p.match(/^(.*?)\s*¥([\d,]+)/);
+  return {label: m ? m[1].trim() : p.trim(), yen: m ? +m[2].replace(/,/g, "") : 0};
+});
+// "グラスワイン 赤／白" → ["グラスワイン 赤", "グラスワイン 白"]
+function splitJa(jp){
+  const ps = jp.split("／"), sp = ps[0].lastIndexOf(" ");
+  return sp < 0 ? ps : ps.map((x, i) => i && !x.includes(" ") ? ps[0].slice(0, sp + 1) + x : x);
+}
+function variantsOf(it, sec){
+  const vs = baseVariants(it, sec), st = stylesOf(sec);
+  if (!st.length) return vs;
+  return vs.flatMap(v => /ボトル|Bottle|瓶|병/.test(v.disp + v.key) ? [{...v, bottle: true}]
+    : st.map(k => ({...v, key: `${v.key}|${STAFF_STYLE[k]}`, group: v.key, groupDisp: v.disp,
+        staff: `${v.staff.replace(/（(.*)）$/, "")}（${[v.ja, STAFF_STYLE[k]].filter(Boolean).join("・")}）`,
+        disp: [v.disp, ST[k]].filter(Boolean).join(" · "), styleName: ST[k]})));
+}
+function baseVariants(it, sec){
+  const [name, jp, price] = it;
+  const parts = partsOf(price);
+  if (sec.course) return [{key: jp, staff: jp, disp: "", yen: parts[0].yen, min: 2, unit: "guests", course: true}];
+  if (parts.length > 1) return parts.sort((a, b) => (/slice|一切れ/.test(a.label)) - (/slice|一切れ/.test(b.label))).map(p => {  // whole plate first
+    if (/slice|一切れ/.test(p.label)) return {key: jp + "|slice", staff: jp + "（1枚）", disp: L.bySlice, yen: p.yen, min: 2, unit: "slices"};
+    if (!p.label) return {key: jp, staff: jp, disp: L.plate, yen: p.yen};
+    const ja = LABEL_JA[p.label] || p.label;
+    return {key: jp + "|" + ja, staff: `${jp}（${ja}）`, disp: (L.sizes && L.sizes[p.label]) || p.label, yen: p.yen, ja};
+  });
+  if (jp.includes("／")) {
+    const js = splitJa(jp), ds = name.split(L.lang === "ja" ? "／" : " / ");
+    return js.map((j, i) => ({key: j, staff: j, disp: ds.length === js.length ? ds[i] : j, yen: parts[0].yen, split: true}));
+  }
+  return [{key: jp, staff: jp, disp: "", yen: parts[0].yen}];
+}
+const stepHTML = key => `<span class="step" data-key="${esc(key)}"></span>`;
+// ORDERING = false builds the plain menu (no + Add, no order list)
+const ORDERING = typeof ORDER === "undefined" || ORDER;
+function orderHTML(it, sec){
+  if (!ORDERING) return "";
+  const vs = variantsOf(it, sec);
+  // a dish listed under "Special Dishes" is ordered from its own category, so it takes that position
+  vs.forEach(v => {
+    const r = REG[v.key];
+    if (!r) REG[v.key] = {...v, name: v.split ? v.disp : it[0] + (v.disp ? ` — ${v.disp}` : ""), n: regN++, special: sec.id === "special"};
+    else if (r.special && sec.id !== "special") Object.assign(r, {n: regN++, special: false});
+  });
+  if (vs.some(v => v.group)) {
+    // styled drink: tap a style to add a glass; each chosen style then gets its own row
+    const groups = [...new Set(vs.map(v => v.group || v.key))];
+    return `<div class="vrows">${groups.map(g => {
+      const gv = vs.filter(v => (v.group || v.key) === g);
+      if (!gv[0].group) {  // a bottle
+        const b = gv[0];
+        return `<div class="vrow"><span>${esc(b.disp)}<small>¥${b.yen.toLocaleString()}</small></span>${stepHTML(b.key)}</div>
+          ${ST.bottleHint ? `<p class="hint">${esc(ST.bottleHint)} <a href="#bottle-set" class="jump">${esc(ST.bottleSet)}</a></p>` : ""}`;
+      }
+      return `<div class="vrow"><span>${esc(gv[0].groupDisp || "")}<small>¥${gv[0].yen.toLocaleString()}</small></span></div>
+        <div class="chips">${gv.map(v => `<button data-act="addkey" data-key="${esc(v.key)}">+ ${esc(v.styleName)}</button>`).join("")}</div>
+        ${gv.map(v => `<div class="vrow st" data-k="${esc(v.key)}" hidden><span>${esc(v.styleName)}</span>${stepHTML(v.key)}</div>`).join("")}`;
+    }).join("")}</div>`;
+  }
+  if (vs.length === 1 && !vs[0].disp) return `<div class="order">${stepHTML(vs[0].key)}</div>`;
+  return `<div class="vrows">${vs.map(v => `<div class="vrow"><span>${esc(v.disp)}<small>¥${v.yen.toLocaleString()}${v.unit === "slices" ? ` · ${esc(L.min2)}` : ""}</small></span>${stepHTML(v.key)}</div>`).join("")}</div>`;
+}
+
+let cart = {};
+try { cart = JSON.parse(localStorage.getItem("risho-order") || "{}"); } catch (_) {}
+const save = () => { try { localStorage.setItem("risho-order", JSON.stringify(cart)); } catch (_) {} };
+const lines = () => Object.keys(cart).filter(k => REG[k] && cart[k] > 0).sort((a, b) => REG[a].n - REG[b].n);
+const qtyText = (k, q) => REG[k].unit === "guests" ? `× ${q}名` : REG[k].unit === "slices" ? `× ${q}枚` : `× ${q}`;
+
+let shown = {};  // counts drawn last time
+function refresh(){
+  const ls = lines();
+  document.getElementById("staff-list").innerHTML = ls.map(k => `<div class="srow">
+      <div class="sj">${esc(REG[k].staff)}</div><div class="q">${qtyText(k, cart[k])}</div>
+      <div class="se"><span>${esc(REG[k].name)}</span>${stepHTML(k)}</div></div>`).join("") || `<p class="sub">${esc(L.empty)}</p>`;
+  document.querySelectorAll(".vrow[data-k]").forEach(r => r.hidden = !(cart[r.dataset.k] > 0));
+  document.querySelectorAll(".step").forEach(el => {
+    const q = cart[el.dataset.key] || 0;
+    const inStaff = !!el.closest("#staff");
+    el.classList.toggle("on", q > 0);
+    el.innerHTML = q ? `<button class="pm" data-act="dec" aria-label="−">−</button>${inStaff ? "" : `<b>${q}</b>`}<button class="pm" data-act="inc" aria-label="+">+</button>`
+                     : `<button class="addbtn" data-act="add">${esc(L.add)}</button>`;
+    const before = shown[el.dataset.key] || 0;
+    if (!inStaff && q !== before) {
+      if (!before || !q) { el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); }
+      else el.querySelector("b").classList.add("bump");
+    }
+  });
+  const countChanged = lines().length !== Object.keys(shown).filter(k => shown[k] > 0).length;
+  shown = {...cart};
+  document.getElementById("orderbar").classList.toggle("show", ls.length > 0);
+  document.body.classList.toggle("has-order", ls.length > 0);
+  const obc = document.getElementById("ob-count");
+  obc.textContent = L.inList(ls.length);
+  if (countChanged) { obc.classList.remove("bump"); void obc.offsetWidth; obc.classList.add("bump"); }
+  const total = ls.reduce((t, k) => t + REG[k].yen * cart[k], 0);
+  document.getElementById("staff-total").innerHTML = ls.length ? `${esc(L.total)} ¥${total.toLocaleString()}<small>${esc(L.totalNote)}</small>` : "";
+  save();
+}
+
+document.addEventListener("click", e => {
+  const j = e.target.closest("a.jump");
+  if (j) { e.preventDefault(); goTo(document.getElementById(j.getAttribute("href").slice(1))); return; }
+  const b = e.target.closest("[data-act]");
+  if (!b) return;
+  if (b.dataset.act === "addkey") { cart[b.dataset.key] = (cart[b.dataset.key] || 0) + 1; refresh(); return; }
+  const key = b.closest(".step").dataset.key, v = REG[key], min = v.min || 1, q = cart[key] || 0;
+  if (b.dataset.act === "add") {
+    if (v.course) Object.keys(cart).forEach(k => { if (REG[k] && REG[k].course) delete cart[k]; });  // one course per table
+    cart[key] = min;
+  } else if (b.dataset.act === "inc") cart[key] = q + 1;
+  else if (q - 1 < min) delete cart[key];
+  else cart[key] = q - 1;
+  refresh();
+});
+const staff = document.getElementById("staff");
+document.getElementById("ob-show").addEventListener("click", () => { staff.classList.add("open"); staff.scrollTop = 0; });
+document.getElementById("staff-back").addEventListener("click", () => { staff.classList.remove("open"); });
+document.getElementById("staff-clear").addEventListener("click", () => {
+  if (!confirm(L.clearAsk)) return;
+  cart = {}; refresh(); staff.classList.remove("open");
+});
+
+document.documentElement.lang = L.lang;
+document.title = L.title;
+document.querySelector("header h1").textContent = L.h1;
+document.getElementById("howto-title").textContent = L.howtoTitle;
+document.getElementById("howto").innerHTML = L.howto.map(t => `<li>${esc(t)}</li>`).join("");
+document.getElementById("legend").innerHTML = `${recIcon()}<span>${esc(L.legendText)}</span>`;
+document.getElementById("food-title").textContent = L.food;
+document.getElementById("drink-title").textContent = L.drink;
+document.getElementById("footer").textContent = L.footer;
+render(FOOD, document.getElementById("food"));
+render(DRINK, document.getElementById("drink"));
+document.getElementById("howorder-title").textContent = L.howOrderTitle;
+document.getElementById("howorder").innerHTML = L.howOrder.map(t => `<li>${esc(t)}</li>`).join("");
+document.getElementById("notmo").textContent = L.notMobile;
+document.getElementById("howorder-alt").textContent = L.orderAlt;
+document.getElementById("staff-notmo").textContent = L.notSent;
+document.getElementById("ob-note").textContent = L.barNote;
+document.getElementById("ob-show").textContent = L.showStaff;
+document.getElementById("staff-title").textContent = L.staffTitle;
+document.getElementById("staff-sub").textContent = L.staffSub;
+document.getElementById("staff-back").textContent = L.back;
+document.getElementById("staff-clear").textContent = L.clear;
+if (ORDERING) refresh();
+else document.querySelectorAll(".howorder,#orderbar,#staff").forEach(el => el.remove());
+
+// category nav: JS scrolling (hash jumps don't work in every viewer), highlight the section on screen
+const short = t => t.replace(/ \(.*\)/, "").replace(/（.*）/, "");
+const nav = document.getElementById("catnav");
+// two rows: Food / Drinks switch on top, the chosen group's categories below
+const bar = document.querySelector(".catnav");
+const chip = g => s => `<li data-g="${g}"><a href="#${s.id}">${esc(short(s.title))}</a></li>`;
+nav.innerHTML = FOOD.map(chip("food")).join("") + DRINK.map(chip("drink")).join("");
+let group = "";
+// Food and Drinks are two pages: switching shows one and hides the other
+function showGroup(g){
+  if (g === group) return;
+  const first = !group;
+  group = g;
+  nav.querySelectorAll("li").forEach(li => li.hidden = li.dataset.g !== g);
+  bar.querySelectorAll(".groups button[data-g]").forEach(b => b.classList.toggle("on", b.dataset.g === g));
+  const shownPage = document.getElementById("page-" + g);
+  document.getElementById("page-food").hidden = g !== "food";
+  document.getElementById("page-drink").hidden = g !== "drink";
+  if (!first) {
+    shownPage.style.setProperty("--dx", g === "drink" ? "28px" : "-28px");
+    shownPage.classList.remove("page-in"); void shownPage.offsetWidth; shownPage.classList.add("page-in");
+  }
+  nav.scrollLeft = 0;
+}
+const goTo = el => window.scrollTo({top: el.getBoundingClientRect().top + scrollY - bar.offsetHeight - 4, behavior: "smooth"});
+document.getElementById("g-food").textContent = L.food;
+document.getElementById("g-drink").textContent = L.drink;
+bar.querySelector(".groups").addEventListener("click", e => {
+  const b = e.target.closest("button[data-g]"); if (!b) return;
+  showGroup(b.dataset.g);
+  window.scrollTo({top: 0});
+});
+// text size: A− / A+ (16px body text by default), remembered on this phone
+const FS = [0.94, 1, 1.07, 1.13, 1.2, 1.27, 1.33];
+let fsI = 2;
+try { const v = +localStorage.getItem("risho-fs"); if (FS.includes(v)) fsI = FS.indexOf(v); } catch (_) {}
+const applyFs = () => document.documentElement.style.setProperty("--fs", FS[fsI]);
+applyFs();
+document.querySelector(".float .fs").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  fsI = Math.min(FS.length - 1, Math.max(0, fsI + +b.dataset.fs));
+  applyFs();
+  try { localStorage.setItem("risho-fs", FS[fsI]); } catch (_) {}
+});
+showGroup("food");
+nav.addEventListener("click", e => {
+  const a = e.target.closest("a"); if (!a) return;
+  e.preventDefault();
+  goTo(document.getElementById(a.getAttribute("href").slice(1)));
+});
+const links = [...nav.querySelectorAll("a")];
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id));
+  const a = nav.querySelector("a.active");
+  if (a) nav.scrollTo({left: a.parentElement.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2, behavior: "smooth"});
+}), {rootMargin: "-40% 0px -55% 0px"});
+document.querySelectorAll("section").forEach(s => io.observe(s));
+// the floating A+/A−/TOP buttons sit over the right edge (prices, + Add), so they
+// slide out of the way while scrolling down and come back when scrolling up or near the top
+const float = document.querySelector(".float");
+let lastY = scrollY;
+addEventListener("scroll", () => {
+  const y = scrollY;
+  if (Math.abs(y - lastY) < 6) return;
+  float.classList.toggle("away", y > lastY && y > 200);
+  lastY = y;
+}, {passive: true});
+const reveal = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add("in"); reveal.unobserve(e.target); }
+}), {rootMargin: "0px 0px -8% 0px"});
+document.querySelectorAll(".howto,.legend,.howorder,.group-title,.hero,.plain,.lead,.jnote,.feature,.item,.photo,.addon").forEach(el => {
+  el.classList.add("rv"); reveal.observe(el);
+});
+document.querySelectorAll(".hero").forEach(el => el.classList.remove("rv"));  // the photo zooms instead of sliding
+document.querySelector(".totop").addEventListener("click", e => { e.preventDefault(); scrollTo({top: 0, behavior: "smooth"}); });
+</script>
+</body>
+</html>
