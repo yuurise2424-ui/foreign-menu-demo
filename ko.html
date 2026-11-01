@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Risho Main Store Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Shippori+Mincho:wght@500;700&family=Noto+Serif+SC:wght@400;600&family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Same page plan as the current official PDF (Risho_Honkan_WebMenu_EN.pdf, 12 pages of 9:16),
+   redrawn in the new design: name + Japanese name on the left, price on the right, no descriptions. */
+:root{--paper:#f8f5ef;--ink:#1d1b18;--sub:#6f685e;--rule:#d8d1c5;--red:#8e1f1a;--k:1}
+@page{size:152.4mm 270.93mm;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{background:#8a8580;font-family:"Source Serif 4",var(--cjk,"Shippori Mincho"),"Shippori Mincho",serif;color:var(--ink)}
+.page{width:152.4mm;height:270.93mm;margin:24px auto;background:var(--paper);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;padding:13mm 11mm 9mm;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+@media print{body{background:none}.page{margin:0;box-shadow:none;break-after:page}}
+.top{display:flex;align-items:center;justify-content:space-between;padding-bottom:5mm;border-bottom:1px solid var(--ink)}
+.top img{height:13mm;filter:brightness(0)}
+.top .store{font-size:9pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--sub);text-align:right;line-height:1.5}
+h1{font-weight:600;font-size:calc(21pt*var(--k));line-height:1.2;margin-top:6mm}
+h1::after{content:"";display:block;width:12mm;height:1px;background:var(--red);margin-top:3mm}
+.body{flex:1;min-height:0;margin-top:3mm}
+h2{font-size:calc(10pt*var(--k));font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--red);
+  margin-top:calc(5mm*var(--k));padding-bottom:1mm;display:flex;gap:6px;align-items:baseline}
+h2 span{font-family:"Shippori Mincho",serif;letter-spacing:.1em;color:var(--sub);font-size:.95em}
+.styles{font-size:calc(9.5pt*var(--k));color:#3b3732;margin:1mm 0 .5mm}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:4mm;padding:calc(2.2mm*var(--k)) 0;border-bottom:1px solid var(--rule)}
+.row .n{font-weight:600;font-size:calc(14pt*var(--k));line-height:1.3}
+.row .n img{width:calc(13pt*var(--k));height:auto;vertical-align:-1px;margin-right:4px}
+.row .lim{font-size:calc(8pt*var(--k));letter-spacing:.12em;text-transform:uppercase;color:var(--red);border:1px solid var(--red);padding:0 4px;margin-left:5px;vertical-align:2px;font-weight:400}
+.row .j{font:700 calc(10.5pt*var(--k)) "Shippori Mincho",serif;color:#4a443c;letter-spacing:.06em;margin-top:.5mm}
+.row .x{font-size:calc(10.5pt*var(--k));color:#3b3732;margin-top:.6mm;line-height:1.35}
+.row .p{white-space:nowrap;text-align:right;font-size:calc(13.5pt*var(--k));line-height:1.35;flex:none}
+.row .p small{display:block;font-size:calc(9pt*var(--k));color:var(--sub)}
+.foot{display:flex;justify-content:space-between;font-size:7.5pt;color:var(--sub);padding-top:3mm;border-top:1px solid var(--rule)}
+.foot img{width:9pt;vertical-align:-1px}
+</style>
+</head>
+<body><div style="background:#1d1b18;color:#f8f5ef;font:12px/1.5 sans-serif;text-align:center;padding:6px 12px">提案用の試作です（正式なメニューではありません） · Prototype for internal review</div>
+<div id="pages"></div>
+<script>
+const IMG = "https://www.shoya.com/.assets/";
+const L = {
+  lang:"ko", font:"Noto Serif KR", title:"리쇼 본점 메뉴",
+  note:"제안용 시안이며 공식 페이지가 아닙니다. 提案用の試作です（公式ページではありません）",
+  kicker:"MENU", h1:"리쇼 본점",
+  intro:"표시 가격은 모두 세금 포함입니다. 각 메뉴에 일본어 이름이 함께 적혀 있으니, 주문 시 직원에게 보여 주세요.",
+  food:"FOOD MENU 요리", drink:"DRINK MENU 음료", drinksNav:"음료",
+  footer:"야키니쿠 쇼야 — 리쇼 본점 · 세금 포함 가격 · 메뉴와 가격은 변경될 수 있습니다.",
+  rec:"저희 가게 추천", recExplain:"이 마크가 붙은 메뉴는 저희 가게 추천 메뉴입니다.", recLegend:"저희 가게 추천", lim:"한정 수량", bottle:"1병", taxIncl:"세금 포함", pairs:"추천 요리", grapes:"품종", aromas:"향",
+};
+// i: [name, Japanese name, price(s), description, flags]
+// flags: r = recommended, l = limited quantity
+const FOOD = [
+  {id:"special", title:"리쇼 일품요리", sub:"李昇 本館の逸品", lead:"셰프가 추천하는 일품요리. 리쇼의 맛을 즐겨 보세요.", items:[
+    ["아카 소고기와 생우니","うに赤","¥2,288","겉면을 숯불에 고소하게 구운 살코기를 육회 스타일로 만들고, 신선한 생우니를 곁들였습니다."],
+    ["특선 우설","特選タン","¥4,048","귀한 생 흑모 와규 우설 한 개에서 소량만 나오는 부드러운 두툼한 우설."],
+    ["특선 설로인 와사비구이","特選ロースのわさび焼き","¥3,168","갓 간 생와사비를 듬뿍 올려 간장에 찍어 드세요."],
+    ["와규 안심 스테이크","和牛ヒレステーキ","¥5,038","소 한 마리에서 아주 적은 양만 나오는 희소 부위."],
+    ["와규 쿠리 (어깨살)","和牛クリ","¥2,728","지방이 적고 진한 맛의 살코기. 부위 모양이 밤(일본어로 ‘쿠리’)을 닮아 붙은 이름입니다."],
+    ["와규 미스지 (부채살)","和牛ミスジ","¥2,728","어깨 안쪽 부위. 살살 녹는 식감은 그야말로 ‘살코기의 왕’."],
+    ["아카 소고기와 생우니 덮밥","うにちらし","¥2,508","‘아카 소고기와 생우니’를 밥 위에 듬뿍 올린 행복한 덮밥."],
+    ["쇼야 부드러운 푸딩","昇家なめらかプリン","¥660","명물 푸딩보다 더 부드러운 맛. 꼭 드셔 보세요."],
+  ]},
+  {id:"course", title:"코스요리", sub:"宴 · Utage", lead:"리쇼의 코스요리와 함께 즐거운 고기 시간을 보내세요.", course:true, caution:"코스는 2명 이상부터 주문 가능하며, 같은 테이블에서는 모두 같은 코스로 주문해 주세요.", items:[
+    ["A 코스","Aコース","¥7,700","",0,["모둠 김치","샐러드","명물 파 샐러드","생우설 소금구이 (파 곁들임)","소금 내장 2종","특선 와규 와사비구이","희소 살코기 양념 3종","순계 나고야 코친 소금구이","돌솥비빔밥","쇼야 부드러운 푸딩"]],
+    ["B 코스","Bコース","¥9,900","","r",["모둠 김치","샐러드","아카 육회","특선 우설 모둠","소금 내장 2종","우니 설로인","극상 설로인","특선 살코기 양념 4종","돌솥비빔밥","쇼야 부드러운 푸딩"]],
+    ["프리미엄 코스","Premiumコース","¥14,300","",0,["모둠 김치","샐러드","양회","특선 우설 모둠","소금 내장 2종","우니 설로인","특선 와규 와사비구이","특선 안심","특선 양념 3종","돌솥비빔밥","쇼야 부드러운 푸딩"]],
+    ["오마카세 코스","おまかせコース","¥16,500부터","자세한 내용은 직원에게 문의해 주세요."],
+  ], addon:"모든 코스에 ¥2,750을 추가하시면 90분간 무제한 음료를 이용하실 수 있습니다. 메뉴의 모든 음료가 포함되지는 않으며, 별도의 무제한 음료 메뉴를 가져다 드립니다."},
+  {id:"sashimi", title:"회", sub:"刺身", items:[
+    ["양회","ミノ刺し","¥1,188","식감이 뛰어나고 담백한 양회."],
+    ["천엽 회","センマイ刺し","¥1,188","독자적인 칼질로 감칠맛을 살렸습니다. 수제 초된장에 찍어 드세요."],
+    ["아카 육회","赤身ユッケ","¥1,518","겉면을 숯불에 고소하게 구운 살코기로 만든 육회 스타일 요리."],
+    ["토로 아카","トロ赤","¥1,518","일본식 양념으로 맛을 낸 고기를 시소 잎과 무에 싸서 드세요.","r"],
+    ["달걀노른자 우설 회","玉タン刺し","¥1,848","귀한 일본산 우설을 달걀노른자에 버무려 특제 간장과 함께."],
+  ]},
+  {id:"sushi", title:"초밥", sub:"寿司", items:[
+    ["아부리 초밥 2개 (희소 살코기)","炙り寿司 2貫盛り（希少赤身使用）","¥1,188","살코기에 어울리도록 지은 초밥용 밥에 생와사비를 듬뿍 올려, 싹파와 함께 즐겨 보세요.","r"],
+  ], photos:[["food_aburisushi.webp","아부리 초밥 2개"]]},
+  {id:"vegetables", title:"생야채", sub:"生野菜", items:[
+    ["명물 파 샐러드","名物ネギ盛","¥792","아삭한 파에 참기름을 듬뿍 넣어 향긋하게 무쳤습니다.","r"],
+    ["상추","サンチュ","¥748","야키니쿠에 빠질 수 없는 단골 메뉴."],
+    ["리쇼 샐러드 - 화이트","李昇サラダ 白","¥858","신선한 생야채에 수제 마 드레싱을 곁들였습니다."],
+    ["리쇼 샐러드 - 김","李昇サラダ 海苔","¥913","한국 김을 듬뿍 넣고 참기름으로 고소하게 버무린 짭짤한 샐러드. 술안주로도 제격입니다."],
+  ], photos:[["food_negimori.webp","명물 파 샐러드"]]},
+  {id:"pickles", title:"김치・나물", sub:"漬物 · Tsukemono", items:[
+    ["김치 / 깍두기 / 오이김치","キムチ／カクテキ／オイキムチ","각 ¥638","인기의 비결은 깊은 맛을 즐길 수 있는 적당한 매운맛."],
+    ["모둠 김치","キムチ盛り合わせ","¥1,078","정성껏 만든 김치 3종 모둠.","r"],
+    ["모둠 나물","ナムル盛り合わせ","¥858","자꾸 손이 가는 식감의 채소 무침. 단품도 준비되어 있습니다."],
+  ]},
+  {id:"shio", title:"소금", sub:"塩 · Shio", items:[
+    ["명물 소금 막창","名物塩ホルモン","¥1,078","창업 당시부터 이어온 명물. 유일무이한 일품 막창.","r"],
+    ["생우설 소금구이 (파 곁들임)","ネギ生塩タン","¥2,178","육질을 꼼꼼히 확인하고 한 장 한 장 정성껏 썰었습니다."],
+    ["특선 우설","特選タン","1점 ¥968<br>¥4,048","귀한 생 흑모 와규 우설 한 개에서 소량만 나오는 부드러운 두툼한 우설.","l"],
+    ["생우설 아랫살 소금구이","生塩タンアゴ","¥1,848","오독오독한 식감과 넘치는 감칠맛. 턱이 빠질 만큼 맛있습니다.","l"],
+    ["소금 양 (미노)","塩ミノ","¥1,848","정성껏 얇게 썬 고급 양을 살짝 구워 드세요."],
+    ["특선 소금 갈비","特選塩カルビ","1점 ¥682<br>¥2,728","부드러운 고기, 고소한 지방. 모두 최상급입니다."],
+    ["특선 소금 설로인","特選塩ロース","1점 ¥737<br>¥2,838","소금과 후추만으로 고기 본연의 맛을 즐겨 보세요."],
+    ["특선 소금 안창살","特選塩ハラミ","1점 ¥792<br>¥3,498","소의 귀한 횡격막 부위. 육즙이 입안 가득 퍼집니다.","l"],
+    ["순계 나고야 코친 소금구이","純系名古屋コーチン塩焼き","¥2,068","나고야가 자랑하는 순종 나고야 코친(토종닭)."],
+  ], photos:[["food_shio-horumon.webp","명물 소금 막창"],["food_shio-mino.webp","소금 양 (미노)"]]},
+  {id:"wasabi", title:"생와사비", sub:"生わさび · Nama-Wasabi", items:[
+    ["특선 갈비 와사비구이","特選カルビのわさび焼き","¥3,058","적당한 기름기가 향긋한 와사비와 환상의 궁합."],
+    ["특선 설로인 와사비구이","特選ロースのわさび焼き","¥3,168","갓 간 생와사비를 듬뿍 올려 간장에 찍어 드세요.","r"],
+    ["특선 안창살 와사비구이","特選ハラミのわさび焼き","¥3,828","고급 안창살을 생와사비와 함께. 그야말로 행복한 맛.","l"],
+  ], photos:[["food_tokusen-loin-wasabiyaki.webp","특선 설로인 와사비구이"]]},
+  {id:"steak", title:"스테이크", sub:"ステーキ", items:[
+    ["소금 우설 스테이크","塩タンステーキ","¥1,958","부드러운 소금 우설을 스테이크로 호쾌하게."],
+    ["꽃등심 스테이크","リブ芯ステーキ","¥2,948","고급 꽃등심의 중심부만을 아낌없이 사용했습니다.","r"],
+    ["와규 안심 스테이크","和牛ヒレステーキ","¥5,038","소 한 마리에서 아주 적은 양만 나오는 희소 부위."],
+  ], photos:[["food_rib-steak.webp","꽃등심 스테이크"]]},
+  {id:"tare", title:"양념", sub:"たれ · Tare", items:[
+    ["와규 갈비","和牛カルビ","¥2,068","입안에서 살살 녹는 맛. 노화 방지에 도움을 주는 비타민 B를 함유하고 있습니다."],
+    ["와규 로스 (살코기)","和牛ロース","¥2,068","아주 부드럽고 기름기가 적은 흑모 와규 살코기. 비타민과 미네랄이 풍부합니다."],
+    ["특선 갈비","特選カルビ","1점 ¥682<br>¥2,728","야키니쿠의 정석."],
+    ["특선 설로인","特選ロース","1점 ¥737<br>¥2,838","와규 지방의 단맛과 고기의 감칠맛이 절묘하게 어우러진 깊은 맛."],
+    ["특선 안창살","特選ハラミ","1점 ¥792<br>¥3,498","진한 감칠맛과 식감에 감탄하게 되는, 두툼하게 썬 호화로운 일품.","rl"],
+    ["특선 안심","特選ヒレ","¥4,488","지방이 적은 최상급 살코기."],
+  ], photos:[["food_tokusen-harami.webp","특선 안창살"]]},
+  {id:"lean", title:"와규 희소 살코기", sub:"希少赤身 · 한정 수량", items:[
+    ["와규 쿠리 (어깨살)","和牛クリ","¥2,728","지방이 적고 진한 맛의 살코기. 부위 모양이 밤(일본어로 ‘쿠리’)을 닮아 붙은 이름입니다.","rl"],
+    ["와규 토가라시 (어깨살)","和牛トウガラシ","¥2,728","깔끔하고 맛있는 살코기. 부위 모양이 고추(일본어로 ‘토가라시’)를 닮아 붙은 이름입니다.","rl"],
+    ["와규 신신 (우둔 중심)","和牛シンシン","¥2,728","우둔 부위 ‘신타마’의 중심 부분. 촉촉하고 부드러우며 감칠맛이 넘치는 희소 부위.","rl"],
+    ["와규 이치보 (보섭살)","和牛イチボ","¥2,728","우둔에서 엉덩이로 이어지는 희소 부위. 적당히 아름다운 마블링이 들어간 일품 고기.","rl"],
+    ["와규 토모산카쿠 (삼각살)","和牛トモサンカク","¥2,728","‘우둔의 상갈비’로 불리며, 우둔 중에서도 지방 균형이 특히 좋은 희소 부위.","rl"],
+    ["와규 미스지 (부채살)","和牛ミスジ","¥2,728","어깨 안쪽 부위. 살살 녹는 식감은 그야말로 ‘살코기의 왕’.","rl"],
+  ], photos:[["food_tomosankaku.webp","와규 토모산카쿠"]]},
+  {id:"uniku", title:"우니쿠 (성게알＋고기)", sub:"うにく（ウニ＋肉）", items:[
+    ["우니 설로인","うにロース","1장 ¥2,090","살짝 구운 특선 설로인에 생우니, 구운 김, 시소 잎을 싸서 드세요.","r"],
+    ["아카 소고기와 생우니","うに赤","¥2,288","겉면을 숯불에 고소하게 구운 살코기를 육회 스타일로 만들고, 신선한 생우니를 곁들였습니다."],
+  ], photos:[["food_uniloin.webp","우니 설로인"],["food_uniaka.webp","아카 소고기와 생우니"]]},
+  {id:"liver", title:"신선한 간", sub:"新鮮レバー", caution:"간은 반드시 익혀서 드세요.", items:[
+    ["특선 소 간","特選レバー","¥1,848","신선도에 특히 신경 쓴, 품절되기 쉬운 인기 간.","rl"],
+    ["양념 소 간","焼きレバー","¥1,078","중독성 있는 진한 맛. 비타민 등 영양이 풍부합니다."],
+  ], photos:[["food_tokusen-liver.webp","특선 소 간"]]},
+  {id:"miso", title:"된장", sub:"味噌 · Miso", items:[
+    ["소 막창 (기아라)","ギアラ","¥1,078","은은하게 느껴지는 지방의 단맛과 씹는 맛이 중독적.","r"],
+    ["특양 (상미노)","上ミノ","¥1,518","와규의 첫 번째 위. 정성껏 칼집을 낸 양은 씹을수록 감칠맛이 넘칩니다."],
+    ["특상 대창","上ホルモン","¥1,078","통칭 ‘뎃짱’. 너무 오래 굽지 않도록 주의하세요."],
+    ["기름이 붙은 특상 곱창","上ホルモン脂付き","¥968","지방의 맛에 빠져들게 됩니다. 연기에 주의하세요."],
+  ], photos:[["food_jouhorumon.webp","특상 대창"]]},
+  {id:"sausage", title:"소시지", sub:"ソーセージ", items:[
+    ["리쇼 수제 우설 소시지 (4개)","李昇自家製牛タンソーセージ（4本）","¥968","굵게 간 우설과 엄선한 돼지고기로 만든 수제 소시지.","r"],
+  ]},
+  {id:"grilled-veg", title:"구운 야채", sub:"焼野菜", items:[
+    ["매실된장 참마구이와 김","長芋の梅味噌焼 韓国海苔添え","¥858","숯불에 구운 참마를 수제 매실된장과 한국 김에 싸서 드세요.","r"],
+    ["모둠 구운 채소와 버섯","焼き野菜ときのこの盛り合わせ","¥902","채소와 버섯으로 균형 있게."],
+  ], photos:[["food_nagaimo.webp","매실된장 참마구이"]]},
+  {id:"rice", title:"밥", sub:"飯 · Meshi", items:[
+    ["비빔밥","ビビンバ","¥1,188","여러 가지 나물을 듬뿍 올린, 채소의 맛이 가득한 비빔밥."],
+    ["꼬리국밥 - 백","テールクッパ 白","¥1,408","꼬리 육수가 살아 있는 소금 간의 진한 국밥."],
+    ["매운 꼬리국밥 - 적","テールクッパ 赤","¥1,518","얼큰하고 영양 만점. 몸속까지 따뜻해집니다."],
+    ["김 꼬리국밥","テールクッパ 海苔","¥1,518","향긋한 한국 구운 김과 송송 썬 파가 식욕을 돋웁니다.","r"],
+    ["구운 주먹밥 (2개)","焼おにぎり（2個）","¥550","미리 구워서 드립니다. 더 바삭하게 드시고 싶으면 숯불 석쇠에 조금 더 구워 드세요."],
+    ["차조기밥","しそご飯","대 ¥660 / 중 ¥550 / 소 ¥440","차조기(시소)와 고소한 깨가 어우러져 젓가락이 멈추지 않는 일품 밥."],
+    ["밥","ご飯","대 ¥484 / 중 ¥363 / 소 ¥242","맛이 뛰어난 특정 농가산 쌀."],
+    ["구운 김","韓国海苔","¥396","참기름과 소금으로 간을 한 고소한 구운 김."],
+  ]},
+  {id:"ishiyaki", title:"돌솥", sub:"石焼 · Ishiyaki", items:[
+    ["돌솥비빔밥","石焼きビビンバ","¥1,408","인기 No.1. 뜨끈뜨끈한 맛을 즐겨 보세요."],
+    ["돌솥 마늘밥","石焼きガーリックライス","¥1,298","와규를 듬뿍 넣은 갈릭 라이스."],
+  ], photos:[["food_ishiyaki-bibimba.webp","돌솥비빔밥"]]},
+  {id:"unimeshi", title:"성게알밥", sub:"うに飯（ウニ＋肉）", items:[
+    ["아카 소고기와 생우니 덮밥","うにちらし","¥2,508","‘아카 소고기와 생우니’를 밥 위에 듬뿍 올린 행복한 덮밥.","r"],
+  ], photos:[["food_uni-chirashi.webp","아카 소고기와 생우니 덮밥"]]},
+  {id:"soup", title:"국물요리", sub:"汁 · Shiru", items:[
+    ["계란국","玉子スープ","¥968","폭신한 달걀에 참기름 향이 은은한 부드러운 맛."],
+    ["꼬리곰탕 - 백","テールスープ 白","¥1,298","6시간 동안 푹 끓인 소금 간의 꼬리곰탕. 각별한 맛."],
+    ["매운 꼬리국 - 적","テールスープ 赤","¥1,408","쇼야의 대표 마무리 국물.","r"],
+  ], photos:[["food_tailsoup-red.webp","매운 꼬리국 - 적"]]},
+  {id:"noodles", title:"면요리", sub:"麺", items:[
+    ["리쇼식 파 국수","李昇流“ネギそば”","¥1,298","소꼬리 육수와 가쓰오(가다랑어) 육수, 두 가지 육수를 합친 국물. 채 썬 대파를 듬뿍 올린 깊은 맛.","r"],
+    ["리쇼식 냉면","李昇流“冷麺”","¥1,188","시간을 들여 정성껏 만든 육수는 다 마시고 싶을 만큼 중독적입니다."],
+  ], photos:[["food_negisoba.webp","리쇼식 파 국수"]]},
+  {id:"dessert", title:"디저트", sub:"菓子 · Kashi", lead:"모두 직접 만들기 때문에 수량이 한정되어 있습니다.", items:[
+    ["명물 쇼야 푸딩","名物 昇家プリン","¥660","나고야 코친 달걀을 사용해 하나하나 정성껏 구워낸 최고의 걸작.","r"],
+    ["쇼야 부드러운 푸딩","昇家なめらかプリン","¥660","명물 푸딩보다 더 부드러운 맛. 꼭 드셔 보세요."],
+    ["레어 치즈케이크","レアチーズケーキ","¥660","블루베리 소스로 촉촉하게 마무리했습니다."],
+    ["생캐러멜 아이스크림","生キャラメルアイス","¥660","차가운 젤라토에 뜨거운 생캐러멜을 뿌린 일품 아이스크림."],
+    ["생 티라미수","生ティラミス","¥770","마스카르포네를 듬뿍 사용한, 입에서 살살 녹는 고급스러운 맛."],
+    ["포장용 쇼야 푸딩","お持ち帰り昇家プリン","2개 ¥1,512<br>4개 ¥3,024","일본 기념품 방송에서 잘 알려진 푸딩. 포장 가능합니다. 직원에게 편하게 말씀해 주세요."],
+  ]},
+];
+
+const DRINK = [
+  {id:"beer", title:"맥주", sub:"ビール", items:[
+    ["생맥주 (프리미엄 몰츠)","生ビール（プレミアムモルツ）","¥803"],
+    ["병맥주","瓶ビール","¥913","다양한 브랜드가 준비되어 있습니다."],
+    ["무알코올 맥주 (올프리)","ノンアルコールビール（オールフリー）","¥660"],
+  ]},
+  {id:"tea-hi", title:"차 하이볼", sub:"お茶ハイ · Tea-Hi", items:[
+    ["우롱 하이","ウーロンハイ","¥770"],["흑우롱 하이","黒ウーロンハイ","¥770"],
+    ["옥수수차 하이","コーン茶ハイ","¥770"],["녹차 하이","緑茶ハイ","¥770"],
+  ]},
+  {id:"chu-hi", title:"사와", sub:"酎ハイ · Chu-Hi", items:[
+    ["생레몬 사와","生レモンハイ","¥858"],["생오렌지 사와","生オレンジハイ","¥858"],["칼피스 사와","カルピスハイ","¥770"],
+  ]},
+  {id:"fruit", title:"과실주", sub:"果実酒", items:[
+    ["과육 매실주","あらごし梅酒","¥858"],["과육 유자주","あらごし柚子","¥858"],["샤인머스캣","シャインマスカット","¥858"],
+  ]},
+  {id:"whisky", title:"위스키", sub:"ウイスキー", items:[
+    ["치타","知多","¥1,100"],["야마자키 NV","山崎NV","¥1,430"],["하쿠슈 NV","白州NV","¥1,430"],["발렌타인","バランタイン","¥1,430"],
+  ]},
+  {id:"makgeolli", title:"막걸리", sub:"マッコリ", items:[
+    ["수제 생막걸리 ‘토라(虎)’","幻の手作り生マッコリ虎","1병 ¥3,630","귀한 수제 생막걸리."],
+  ]},
+  {id:"sake", title:"사케", sub:"日本酒", lead:"데운 사케도 가능합니다.", items:[
+    ["닷사이 준마이 다이긴조 (야마구치)","獺祭 純米大吟醸【山口】","180ml (1홉) ¥1,518"],
+    ["지테이노신피 다이긴조 (아키타)","地底の神秘 大吟醸【秋田】","180ml (1홉) ¥1,628"],
+  ]},
+  {id:"shochu", title:"소주", sub:"焼酎 · 고구마 / 보리 / 쌀", items:[
+    ["다이야메 고구마 소주","だいやめ","잔 ¥682<br>병 ¥4,180"],
+    ["잇코몬 고구마 소주","一刻者","잔 ¥737<br>병 ¥4,400"],
+    ["히토쓰부노무기 보리 소주","一粒の麦","잔 ¥792<br>병 ¥4,620"],
+    ["나카나카 보리 소주","中々","잔 ¥792<br>병 ¥4,620"],
+    ["바쓰군 쌀 소주","ばつぐん","잔 ¥682<br>병 ¥4,180"],
+  ]},
+  {id:"bottle-set", title:"보틀 세트", sub:"ボトルセット", items:[
+    ["우롱차","ウーロン茶","¥660"],["탄산수","炭酸","¥660"],["녹차","緑茶","¥660"],
+    ["우메보시 (6개)","梅干し（6個）","¥352"],["레몬 조각 (6개)","カットレモン（6個）","¥352"],
+  ]},
+  {id:"soft", title:"소프트드링크", sub:"ソフトドリンク", items:[
+    ["우롱차 / 흑우롱차 / 녹차 / 옥수수차 / 칼피스 / 콜라 / 진저에일 / 오렌지 / 자몽 / 사과","ウーロン茶／黒ウーロン茶／緑茶／コーン茶／カルピス／コーラ／ジンジャーエール／オレンジ／グレープフルーツ／りんご","각 ¥550"],
+  ]},
+  {id:"red-wine", title:"레드 와인", sub:"赤ワイン", wine:true, items:[
+    ["Casillero del Diablo Reserva Privada Cabernet Sauvignon","カッシェロ・デル・ディアブロ レセルバ・プリバダ カベルネ・ソーヴィニヨン","¥6,050","우아한 블랙커런트 향에 체리와 자두 같은 검은 과일 아로마, 프렌치 오크 통에서 온 바닐라와 삼나무의 복합적인 향이 느껴지는 풀바디 레드 와인.",
+      {o:"칠레 마이포 밸리 · 풀바디",p:"양념 ‘와규 갈비’ ‘와규 로스’",g:"카베르네 소비뇽 85% / 시라즈 9% / 카베르네 프랑 6%",a:"바닐라, 블랙베리, 오크"}],
+    ["Trivento Golden Reserve Malbec","トリヴェント ゴールデン・リザーブ マルベック","¥9,350","체리, 딸기 등 힘차고 신선한 과일 향에 오크 향이 균형 있게 어우러진 풀바디 레드 와인.",
+      {o:"아르헨티나 쿠요 · 풀바디",p:"특선 소금 갈비, 특선 소금 설로인",g:"말벡 85% / 기타 15%",a:"딸기, 블루베리, 오크"}],
+    ["Robert Mondavi Private Selection Vint Central Coast Cabernet Sauvignon","ロバート・モンダヴィ プライベート・セレクション ヴィント セントラル・コースト カベルネ・ソーヴィニヨン","¥7,150","검은 과일을 바탕으로, 태평양 연안의 서늘한 기후가 만든 붉은 과일의 뉘앙스가 느껴지는 우아하고 복합적인 와인.",
+      {o:"미국 캘리포니아 / 센트럴 코스트 · 풀바디",p:"특선 설로인 와사비구이, 양념 ‘와규 로스’",g:"카베르네 소비뇽 86% / 말벡 11% / 프티 베르도 1% / 기타 2%",a:"라즈베리, 토스트, 커피"}],
+    ["Chateau Mercian Mariko Syrah","シャトー・メルシャン 椀子シラー","¥13,200","나가노현 우에다시의 자사 포도밭 ‘마리코 빈야드’는 ‘월드 베스트 빈야드 2024’에서 일본 유일 5년 연속 선정. 기분 좋은 산미와 과일 맛이 조화로운 와인.",
+      {o:"일본 나가노현 / 우에다시 마리코 빈야드 · 풀바디",p:"특선 갈비 와사비구이, 리쇼 수제 우설 소시지",g:"시라 100%",a:"백후추, 카시스, 다크 초콜릿"}],
+    ["Chateau Mercian Hokushin Cabernet Sauvignon","シャトー・メルシャン 北信カベルネ・ソーヴィニヨン","¥19,800","깊은 가넷 색에 잘 익은 블랙베리, 카시스 등 검은 과일 향, 산딸기 같은 붉은 과일의 뉘앙스도 느껴지는 레드 와인.",
+      {o:"일본 나가노현 / 호쿠신 지구 · 풀바디",p:"와규 이치보, 특선 설로인 와사비구이",g:"카베르네 소비뇽 87% / 메를로 13%",a:"블랙베리, 카시스, 초콜릿"}],
+    ["Kenzo Estate “rindo”","ケンゾーエステート 紫鈴リンドウ","¥27,500","입에 머금는 순간 힘과 섬세함을 함께 느낄 수 있습니다. 이어서 기품 있는 산미와 촘촘하고 촉촉한 타닌이 실크처럼 부드럽게 혀를 감싸고, 풍부한 과일 맛과 함께 입안에 퍼집니다.",
+      {o:"미국 캘리포니아 · 풀바디",p:"와규 안심 스테이크, 특선 소 간",g:"카베르네 소비뇽 62% / 메를로 22% / 프티 베르도 9% / 카베르네 프랑 4% / 말벡 3%",a:"블랙체리, 자두, 건포도"}],
+    ["Trivento Eolo Malbec","トリヴェント エオロ マルベック","¥68,200","트리벤토 최상급 와인이자 세계 최고 수준의 말벡으로 만든 와인 중 하나. 100여 년 전에 심은 포도밭의 단 4ha 구획에서 그해 최고의 포도만을 한 알 한 알 선별해 만듭니다. 진하면서도 우아한 맛.",
+      {o:"아르헨티나 멘도사 / 루한 데 쿠요 · 풀바디",p:"와규 안심 스테이크, 특선 소 간",g:"말벡 100%",a:"라즈베리, 제비꽃, 블랙베리"}],
+    ["Opus One","オーパスワン","¥154,000","필리프 드 로칠드 남작과 로버트 몬다비가 함께 만든 와인. 아름답게 균형 잡힌 부드러운 타닌이 신선한 산미와 어우러져 크리미한 감촉을 줍니다.",
+      {o:"미국 캘리포니아 · 풀바디",p:"와규 안심 스테이크, 꽃등심 스테이크",g:"카베르네 소비뇽 84% / 프티 베르도 6% / 메를로 5% / 카베르네 프랑 4% / 말벡 1%",a:"카시스, 제비꽃, 다크 초콜릿"}],
+  ]},
+  {id:"white-wine", title:"화이트 와인", sub:"白ワイン", wine:true, items:[
+    ["Chateau Mercian Hokushin Chardonnay","シャトー・メルシャン 北信シャルドネ","¥8,800","부드러운 산미와 과일에서 오는 풍성함이 향과 어우러져, 샤르도네 특유의 볼륨감을 느낄 수 있는 드라이 화이트 와인.",
+      {o:"일본 나가노현 / 호쿠신 지구 · 드라이",p:"특선 설로인 와사비구이, 아부리 초밥 2개 (희소 살코기)",g:"샤르도네 100%",a:"열대 과일, 버터, 견과류"}],
+    ["Kenzo Estate “asatsuyu”","ケンゾー エステート あさつゆ","¥24,200","생기 있는 산미가 돋보이며 밝고 상쾌한 청량감과 함께 응축된 신선한 과일 맛이 느껴지는 풀바디. 풍성한 여운이 길게 남으며 입안에 기분 좋은 청량감을 줍니다.",
+      {o:"미국 캘리포니아 · 드라이",p:"소금 특선 우설, 모둠 구운 채소와 버섯",g:"소비뇽 블랑 90% / 세미용 10%",a:"시트러스, 라임, 백도"}],
+  ]},
+  {id:"champagne", title:"샴페인", sub:"シャンパン", wine:true, items:[
+    ["Champagne Piper-Heidsieck Brut","シャンパーニュ パイパー・エドシック ブリュット","¥13,200","마리 앙투아네트 왕비에게 헌상되고 마릴린 먼로가 사랑한 샴페인. 부드럽고 균형 잡힌 과일 맛이 특징인 우아하고 매혹적인 샴페인.",
+      {o:"프랑스 샹파뉴 · 드라이",p:"설로인 한 장 구이, 특선 안창살",g:"피노 누아 위주 / 뫼니에 / 샤르도네",a:"서양배, 사과, 아몬드"}],
+    ["Champagne Charles Heidsieck Brut Réserve","シャンパーニュ シャルル・エドシック ブリュット レゼルヴ","¥18,700","1859년 보르도 만국박람회 금상. 아이젠하워, 처칠, 달리 등이 소중한 손님을 대접할 때 선택했습니다. 끊임없이 이어지는 섬세한 기포와 매우 복합적이고 식욕을 돋우는 아로마.",
+      {o:"프랑스 샹파뉴 · 드라이",p:"아부리 초밥 2개 (희소 살코기), 설로인 한 장 구이, 특선 안창살",g:"샤르도네 40% / 피노 누아 40% / 뫼니에 20%",a:"망고, 살구, 피스타치오"}],
+  ]},
+  {id:"glass-wine", title:"글라스 와인", sub:"グラスワイン", items:[
+    ["글라스 스파클링","グラススパークリング","¥1,078"],
+    ["글라스 와인 레드 / 화이트","グラスワイン 赤／白","각 ¥968"],
+  ]},
+];
+
+// Courses first (recommended), then the order of the current official PDF (Risho_Honkan_WebMenu_EN.pdf). With the short
+// descriptions added, its denser pages are split in two so the text stays readable on a phone.
+const CLASSIC_TITLES = {
+  en: ["Course Menu", "Chef's Recommendations", "Sashimi & Sushi", "Vegetables & Kimchi", "Salt-Seasoned", "Fresh Wasabi & Steak", "Sauce-Marinated", "Rare Lean Wagyu", "Sea Urchin, Liver & Miso", "Grilled Vegetables & Stone-Pot Rice", "Rice", "Soups & Noodles", "Desserts", "Drinks", "Drinks", "Red Wine", "Red Wine", "White Wine & Champagne"],
+  ja: ["コース", "料理長のおすすめ", "刺身・寿司", "生野菜・キムチ", "塩味の料理", "生わさび・ステーキ", "たれ味の料理", "希少な和牛の赤身", "うにく・レバー・味噌", "焼き野菜・石焼き", "ご飯もの", "スープ・麺", "デザート", "ドリンク", "ドリンク", "赤ワイン", "赤ワイン", "白ワイン・シャンパン"],
+  "zh-Hans": ["套餐", "主厨推荐", "刺身・寿司", "新鲜蔬菜・泡菜", "盐味", "鲜山葵・牛排", "酱汁腌制", "稀有赤身和牛", "海胆与牛肉・牛肝・味噌", "烤蔬菜・石锅", "米饭", "汤类・面类", "甜品", "饮品", "饮品", "红葡萄酒", "红葡萄酒", "白葡萄酒・香槟"],
+  ko: ["코스요리", "셰프 추천", "회・초밥", "생야채・김치", "소금", "생와사비・스테이크", "양념", "와규 희소 살코기", "우니쿠・간・된장", "구운 야채・돌솥", "밥", "국물요리・면요리", "디저트", "음료", "음료", "레드 와인", "레드 와인", "화이트 와인・샴페인"],
+};
+const CLASSIC = [
+  ["course"], ["special"], ["sashimi", "sushi"], ["vegetables", "pickles"], ["shio"], ["wasabi", "steak"],
+  ["tare"], ["lean"], ["uniku", "liver", "miso"], ["sausage", "grilled-veg", "ishiyaki", "unimeshi"], ["rice"],
+  ["soup", "noodles"], ["dessert"],
+  ["beer", "tea-hi", "chu-hi", "fruit", "whisky", "bottle-set"], ["makgeolli", "sake", "shochu", "soft"],
+  ["red-wine:0-4"], ["red-wine:4-8"], ["white-wine", "champagne", "glass-wine"],
+].map((secs, i) => ({title: CLASSIC_TITLES[L.lang][i], secs}));
+// this version keeps only the official descriptions: undo the lines added for the new design
+// (in English they live apart in DESC, so only the Japanese check copy needs this)
+if (L.lang === "ja") FOOD.forEach(s => s.items.forEach(it => {
+  if (typeof it[3] !== "string") return;
+  it[3] = it[3].replace("海苔で巻いてお召し上がりください。", "");
+  if (it[1] === "生塩タンアゴ") it[3] = "コリコリの食感と溢れる旨み。アゴが外れる美味しさ。";
+}));
+const CLASSIC_TEXT = {
+  en: {foot: "All prices include tax. Show the Japanese name to staff when ordering.", each: "each", min2: "Min. 2 slices"},
+  ja: {foot: "価格はすべて税込です。ご注文の際は日本語の品名をスタッフにお見せください。", each: "各", min2: "2枚からご注文いただけます"},
+  "zh-Hans": {foot: "价格均含税。点餐时请向员工出示日文菜名。", each: "每款", min2: "2片起点", cjk: "Noto Serif SC"},
+  ko: {foot: "가격은 모두 세금 포함입니다. 주문 시 일본어 메뉴명을 직원에게 보여 주세요.", each: "각", min2: "2점부터 주문 가능", cjk: "Noto Serif KR"},
+}[L.lang];
+L.classicFoot = CLASSIC_TEXT.foot;
+L.each = CLASSIC_TEXT.each;
+L.min2 = L.min2 || CLASSIC_TEXT.min2;
+if (CLASSIC_TEXT.cjk) L.cjk = CLASSIC_TEXT.cjk;
+
+// How a drink is served (fruit liqueur, shochu, whisky): shown on every menu,
+// and on the order-list version the guest picks one when adding a glass.
+const STYLED = {fruit: "std", shochu: "std", whisky: "whisky"};  // section id -> set of styles
+const STYLE_SETS = {std: ["rock", "water", "hot", "soda"], whisky: ["rock", "water", "hot", "highball"]};
+const STYLE_TEXT = {
+  en: {title: "How would you like it?", rock: "On the rocks", water: "With water", hot: "With hot water", soda: "With soda", highball: "Highball",
+       bottleHint: "For a bottle, mixers are on the", bottleSet: "Bottle Set"},
+  ja: {title: "飲み方", rock: "ロック", water: "水割り", hot: "お湯割り", soda: "ソーダ割り", highball: "ハイボール",
+       bottleHint: "ボトルの割り材は", bottleSet: "ボトルセット"},
+  "zh-Hans": {title: "饮用方式", rock: "加冰", water: "兑水", hot: "兑热水", soda: "兑苏打水", highball: "嗨棒（兑苏打水）"},
+  ko: {title: "드시는 방법", rock: "온더록", water: "물 타서", hot: "뜨거운 물 타서", soda: "소다 타서", highball: "하이볼"},
+};
+const ST = STYLE_TEXT[L.lang] || STYLE_TEXT.en;
+const STAFF_STYLE = STYLE_TEXT.ja;  // the staff screen is always in Japanese
+const stylesOf = sec => (STYLE_SETS[STYLED[sec.id]] || []);
+const styleLine = sec => stylesOf(sec).map(k => ST[k]).join(" / ");
+
+
+// courses come first on every menu
+FOOD.sort((a, b) => (b.id === "course") - (a.id === "course"));
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const SEC = Object.fromEntries([...FOOD, ...DRINK].map(s => [s.id, s]));
+const rec = `<img src="${IMG}menu-recommendation.svg" alt="${esc(L.rec)}">`;
+
+function rowHTML(it, sec){
+  let [name, jp, price, desc, flags, extra] = it;
+  if (flags && typeof flags === "object") [flags, extra] = ["", flags];
+  const f = typeof flags === "string" ? flags : "";
+  // the short description from the official Japanese menu (translated); courses list their dishes,
+  // wines show origin + description. Texts added for the new design (DESC in en-v2.js) are not used here.
+  const x = sec.course && Array.isArray(extra) ? extra.join(", ")
+          : sec.wine && extra ? [extra.o, desc].filter(Boolean).join(" — ")
+          : desc || "";
+  // "1 slice ¥968<br>¥4,048": the whole plate large, the per-slice price small with "min. 2"
+  const parts = price.split("<br>");
+  const p = parts.length === 2 && /^¥[\d,]+$/.test(parts[1])
+    ? `${parts[1]}<small>${parts[0]}${/slice|一切れ|片|점/.test(parts[0]) && L.min2 ? ` · ${L.min2}` : ""}</small>` : parts.join("<br>");
+  return `<div class="row"><div><div class="n">${f.includes("r") ? rec : ""}${esc(name)}${f.includes("l") ? `<span class="lim">${esc(L.lim)}</span>` : ""}</div>
+    <div class="j" lang="ja">${esc(jp)}</div>${x ? `<div class="x">${esc(x)}</div>` : ""}</div>
+    <div class="p">${p}${sec.wine ? `<small>${esc(L.bottle)}</small>` : ""}</div></div>`;
+}
+
+// drinks: neighbouring items with the same price and no description share one row
+// ("Fresh Lemon Sour / Fresh Orange Sour … each ¥858"), as on the current PDF
+function compact(sec){
+  if (sec.wine || !DRINK.some(d => d.id === sec.id)) return sec.items;
+  const out = [];
+  for (const it of sec.items) {
+    const last = out[out.length - 1];
+    if (last && !it[3] && !last[3] && last[2].replace(/^\S+ (?=¥)/, "") === it[2] && !/<br>/.test(it[2]))
+      out[out.length - 1] = [`${last[0]} / ${it[0]}`, `${last[1]}／${it[1]}`, `${L.each} ${it[2]}`];
+    else out.push(it);
+  }
+  return out;
+}
+
+const total = CLASSIC.length;
+document.getElementById("pages").innerHTML = CLASSIC.map((pg, i) => `<section class="page">
+  <div class="top"><img src="${IMG}trademark-restaurant-risho-honkan.svg" alt="李昇 本館"><div class="store">${esc(L.h1)}<br>Menu</div></div>
+  <h1>${esc(pg.title)}</h1>
+  <div class="body">${pg.secs.map(ref => {
+    // "red-wine:0-4" = items 0..3 of a section that is split over two pages
+    const [id, range] = ref.split(":"), whole = SEC[id];
+    const [a, z] = range ? range.split("-").map(Number) : [0, whole.items.length];
+    const s = {...whole, items: whole.items.slice(a, z)};
+    const head = pg.secs.length > 1 ? `<h2>${esc(s.title)}<span lang="ja">${esc(s.sub.split(" · ")[0])}</span></h2>` : "";
+    const st = stylesOf(s).length ? `<div class="styles">${esc(ST.title)}：${esc(styleLine(s))}</div>` : "";
+    return head + st + compact(s).map(it => rowHTML(it, s)).join("");
+  }).join("")}</div>
+  <div class="foot"><span>${rec} ${esc(L.rec)} · ${esc(L.classicFoot)}</span><span>${i + 1} / ${total}</span></div>
+</section>`).join("");
+
+document.documentElement.lang = L.lang;
+if (L.cjk) document.documentElement.style.setProperty("--cjk", `"${L.cjk}"`);
+document.title = L.title;
+// shrink a page's text until its list fits the page
+function fit(){
+  document.querySelectorAll(".page").forEach(pg => {
+    let k = 1;
+    pg.style.setProperty("--k", k);
+    const body = pg.querySelector(".body");
+    while (body.scrollHeight > body.clientHeight + 1 && k > 0.7) {
+      k = Math.round((k - 0.02) * 100) / 100;
+      pg.style.setProperty("--k", k);
+    }
+  });
+}
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(fit);
+</script>
+</body>
+</html>

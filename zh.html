@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Risho Main Store Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Shippori+Mincho:wght@500;700&family=Noto+Serif+SC:wght@400;600&family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Same page plan as the current official PDF (Risho_Honkan_WebMenu_EN.pdf, 12 pages of 9:16),
+   redrawn in the new design: name + Japanese name on the left, price on the right, no descriptions. */
+:root{--paper:#f8f5ef;--ink:#1d1b18;--sub:#6f685e;--rule:#d8d1c5;--red:#8e1f1a;--k:1}
+@page{size:152.4mm 270.93mm;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{background:#8a8580;font-family:"Source Serif 4",var(--cjk,"Shippori Mincho"),"Shippori Mincho",serif;color:var(--ink)}
+.page{width:152.4mm;height:270.93mm;margin:24px auto;background:var(--paper);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;padding:13mm 11mm 9mm;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+@media print{body{background:none}.page{margin:0;box-shadow:none;break-after:page}}
+.top{display:flex;align-items:center;justify-content:space-between;padding-bottom:5mm;border-bottom:1px solid var(--ink)}
+.top img{height:13mm;filter:brightness(0)}
+.top .store{font-size:9pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--sub);text-align:right;line-height:1.5}
+h1{font-weight:600;font-size:calc(21pt*var(--k));line-height:1.2;margin-top:6mm}
+h1::after{content:"";display:block;width:12mm;height:1px;background:var(--red);margin-top:3mm}
+.body{flex:1;min-height:0;margin-top:3mm}
+h2{font-size:calc(10pt*var(--k));font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--red);
+  margin-top:calc(5mm*var(--k));padding-bottom:1mm;display:flex;gap:6px;align-items:baseline}
+h2 span{font-family:"Shippori Mincho",serif;letter-spacing:.1em;color:var(--sub);font-size:.95em}
+.styles{font-size:calc(9.5pt*var(--k));color:#3b3732;margin:1mm 0 .5mm}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:4mm;padding:calc(2.2mm*var(--k)) 0;border-bottom:1px solid var(--rule)}
+.row .n{font-weight:600;font-size:calc(14pt*var(--k));line-height:1.3}
+.row .n img{width:calc(13pt*var(--k));height:auto;vertical-align:-1px;margin-right:4px}
+.row .lim{font-size:calc(8pt*var(--k));letter-spacing:.12em;text-transform:uppercase;color:var(--red);border:1px solid var(--red);padding:0 4px;margin-left:5px;vertical-align:2px;font-weight:400}
+.row .j{font:700 calc(10.5pt*var(--k)) "Shippori Mincho",serif;color:#4a443c;letter-spacing:.06em;margin-top:.5mm}
+.row .x{font-size:calc(10.5pt*var(--k));color:#3b3732;margin-top:.6mm;line-height:1.35}
+.row .p{white-space:nowrap;text-align:right;font-size:calc(13.5pt*var(--k));line-height:1.35;flex:none}
+.row .p small{display:block;font-size:calc(9pt*var(--k));color:var(--sub)}
+.foot{display:flex;justify-content:space-between;font-size:7.5pt;color:var(--sub);padding-top:3mm;border-top:1px solid var(--rule)}
+.foot img{width:9pt;vertical-align:-1px}
+</style>
+</head>
+<body><div style="background:#1d1b18;color:#f8f5ef;font:12px/1.5 sans-serif;text-align:center;padding:6px 12px">提案用の試作です（正式なメニューではありません） · Prototype for internal review</div>
+<div id="pages"></div>
+<script>
+const IMG = "https://www.shoya.com/.assets/";
+const L = {
+  lang:"zh-Hans", font:"Noto Serif SC", title:"李昇 本店 菜单",
+  note:"提案用样稿，非官方页面。提案用の試作です（公式ページではありません）",
+  kicker:"MENU", h1:"李昇 本店",
+  intro:"所示价格均含税。每道菜都附有日文菜名，点餐时可直接指给员工看。",
+  food:"FOOD MENU 餐点", drink:"DRINK MENU 饮品", drinksNav:"饮品",
+  footer:"烧肉 昇家 — 李昇 本店 · 价格含税 · 菜品及价格可能变动。",
+  rec:"本店推荐", recExplain:"带有此标记的菜品为本店推荐。", recLegend:"本店推荐", lim:"限量", bottle:"整瓶", taxIncl:"含税", pairs:"推荐搭配", grapes:"葡萄品种", aromas:"香气",
+};
+// i: [name, Japanese name, price(s), description, flags]
+// flags: r = recommended, l = limited quantity
+const FOOD = [
+  {id:"special", title:"李昇特色菜", sub:"李昇 本館の逸品", lead:"主厨推荐的招牌佳肴，带您品味李昇的独特风味。", items:[
+    ["赤身牛肉配生海胆","うに赤","¥2,288","将表面以炭火炙烤至焦香的赤身牛肉做成生拌风味，再配上新鲜生海胆。"],
+    ["特选牛舌","特選タン","¥4,048","取自珍贵的新鲜黑毛和牛牛舌，一条只能切出少量的柔嫩厚切牛舌。"],
+    ["特选西冷鲜山葵烧","特選ロースのわさび焼き","¥3,168","铺上大量现磨新鲜真山葵，蘸少许酱油享用。"],
+    ["和牛菲力牛排","和牛ヒレステーキ","¥5,038","一头牛只能取得极少量的稀有部位。"],
+    ["和牛 Kuri（肩部）","和牛クリ","¥2,728","脂肪少、滋味浓郁的赤身肉。因形状似栗子（日语“Kuri”）而得名。"],
+    ["和牛 Misuji（板腱）","和牛ミスジ","¥2,728","肩胛内侧的肉。入口即化的口感，堪称“赤身之王”。"],
+    ["赤身牛肉海胆盖饭","うにちらし","¥2,508","将“赤身牛肉配生海胆”铺满米饭，大口享用的幸福盖饭。"],
+    ["昇家滑嫩布丁","昇家なめらかプリン","¥660","比招牌布丁更加顺滑，敬请品尝。"],
+  ]},
+  {id:"course", title:"套餐", sub:"宴 · Utage", lead:"享受幸福的吃肉时光——李昇套餐料理。", course:true, caution:"套餐需 2 位以上点餐，同桌客人请点相同的套餐。", items:[
+    ["A 套餐","Aコース","¥7,700","",0,["泡菜拼盘","沙拉","招牌葱沙拉","盐烤鲜牛舌（配葱花）","盐味牛内脏 2 种","特选和牛鲜山葵烧","稀有赤身酱汁 3 种拼盘","纯种名古屋交趾鸡盐烤","石锅拌饭","昇家滑嫩布丁"]],
+    ["B 套餐","Bコース","¥9,900","","r",["泡菜拼盘","沙拉","赤身牛肉生拌","特选牛舌拼盘","盐味牛内脏 2 种","海胆西冷","极品西冷","特选赤身酱汁 4 种拼盘","石锅拌饭","昇家滑嫩布丁"]],
+    ["Premium 套餐","Premiumコース","¥14,300","",0,["泡菜拼盘","沙拉","牛肚刺身","特选牛舌拼盘","盐味牛内脏 2 种","海胆西冷","特选和牛鲜山葵烧","特选菲力","特选酱汁 3 种拼盘","石锅拌饭","昇家滑嫩布丁"]],
+    ["主厨精选套餐","おまかせコース","¥16,500 起","详情请咨询员工。"],
+  ], addon:"畅饮加购（限时 90 分钟）：任何套餐均可加购，+¥2,750。畅饮仅限部分饮品，我们会另行提供畅饮菜单。"},
+  {id:"sashimi", title:"刺身", sub:"刺身", items:[
+    ["牛肚刺身","ミノ刺し","¥1,188","口感绝佳、清爽的牛肚。"],
+    ["牛百叶刺身","センマイ刺し","¥1,188","以独特刀工引出鲜味。请蘸自制醋味噌享用。"],
+    ["赤身牛肉生拌","赤身ユッケ","¥1,518","将表面以炭火炙烤至焦香的赤身牛肉做成生拌风味。"],
+    ["和风赤身生拌（Toro Aka）","トロ赤","¥1,518","以和风酱汁调味的牛肉，请用紫苏叶和萝卜包着享用。","r"],
+    ["牛舌刺身配蛋黄","玉タン刺し","¥1,848","珍贵的日本国产牛舌拌上蛋黄，配特制酱油享用。"],
+  ]},
+  {id:"sushi", title:"寿司", sub:"寿司", items:[
+    ["炙烤寿司 2 贯（稀有赤身）","炙り寿司 2貫盛り（希少赤身使用）","¥1,188","使用专为赤身肉调制的醋饭。请蘸上大量新鲜真山葵，搭配芽葱一起享用。","r"],
+  ], photos:[["food_aburisushi.webp","炙烤寿司 2 贯"]]},
+  {id:"vegetables", title:"新鲜蔬菜", sub:"生野菜", items:[
+    ["招牌葱沙拉","名物ネギ盛","¥792","爽脆的葱，以大量芝麻油调出浓郁香气。","r"],
+    ["生菜","サンチュ","¥748","烤肉的经典搭配。"],
+    ["李昇沙拉 - 白","李昇サラダ 白","¥858","新鲜蔬菜配自制山药泥沙拉酱。"],
+    ["李昇沙拉 - 海苔","李昇サラダ 海苔","¥913","大量使用韩国海苔，以芝麻油调出焦香的盐味沙拉，非常下酒。"],
+  ], photos:[["food_negimori.webp","招牌葱沙拉"]]},
+  {id:"pickles", title:"泡菜・拌菜", sub:"漬物 · Tsukemono", items:[
+    ["泡菜 / 萝卜块泡菜 / 黄瓜泡菜","キムチ／カクテキ／オイキムチ","每款 ¥638","人气的秘密在于恰到好处的辣度与深邃的风味。"],
+    ["泡菜拼盘","キムチ盛り合わせ","¥1,078","三款精心制作的泡菜拼盘。","r"],
+    ["韩式拌菜拼盘","ナムル盛り合わせ","¥858","口感令人上瘾的凉拌蔬菜。也可单点。"],
+  ]},
+  {id:"shio", title:"盐味", sub:"塩 · Shio", items:[
+    ["招牌盐味牛皱胃","名物塩ホルモン","¥1,078","创业以来的招牌菜，独一无二的绝品牛内脏。","r"],
+    ["盐烤鲜牛舌（配葱花）","ネギ生塩タン","¥2,178","严选肉质，每一片都由人工细心切制。"],
+    ["特选牛舌","特選タン","1片 ¥968<br>¥4,048","取自珍贵的新鲜黑毛和牛牛舌，一条只能切出少量的柔嫩厚切牛舌。","l"],
+    ["盐烤鲜牛舌下侧肉","生塩タンアゴ","¥1,848","脆嫩的口感与满溢的鲜味。","l"],
+    ["盐味牛肚（第一胃）","塩ミノ","¥1,848","精心切成薄片的优质牛肚，快速炙烤后享用。"],
+    ["特选盐味Kalbi","特選塩カルビ","1片 ¥682<br>¥2,728","肉质柔嫩，油脂鲜美，皆属上乘。"],
+    ["特选盐味西冷","特選塩ロース","1片 ¥737<br>¥2,838","仅以盐和胡椒调味，尽享牛肉本身的美味。"],
+    ["特选盐味横膈膜肉（Harami）","特選塩ハラミ","1片 ¥792<br>¥3,498","稀有的牛横膈膜，丰沛的肉汁在口中迸发。","l"],
+    ["纯种名古屋交趾鸡盐烤","純系名古屋コーチン塩焼き","¥2,068","名古屋引以为傲的纯种名古屋交趾鸡。"],
+  ], photos:[["food_shio-horumon.webp","招牌盐味牛皱胃"],["food_shio-mino.webp","盐味牛肚（第一胃）"]]},
+  {id:"wasabi", title:"鲜山葵", sub:"生わさび · Nama-Wasabi", items:[
+    ["特选Kalbi鲜山葵烧","特選カルビのわさび焼き","¥3,058","适度的油脂与香气十足的山葵完美搭配。"],
+    ["特选西冷鲜山葵烧","特選ロースのわさび焼き","¥3,168","铺上大量现磨新鲜真山葵，蘸少许酱油享用。","r"],
+    ["特选横膈膜肉鲜山葵烧","特選ハラミのわさび焼き","¥3,828","以新鲜真山葵品尝上等横膈膜肉，堪称至福之味。","l"],
+  ], photos:[["food_tokusen-loin-wasabiyaki.webp","特选西冷鲜山葵烧"]]},
+  {id:"steak", title:"牛排", sub:"ステーキ", items:[
+    ["盐味牛舌牛排","塩タンステーキ","¥1,958","将柔嫩盐味牛舌做成牛排，豪迈享用。"],
+    ["肋眼牛排","リブ芯ステーキ","¥2,948","奢侈地只取上等肋眼的中心部位。","r"],
+    ["和牛菲力牛排","和牛ヒレステーキ","¥5,038","一头牛只能取得极少量的稀有部位。"],
+  ], photos:[["food_rib-steak.webp","肋眼牛排"]]},
+  {id:"tare", title:"酱汁腌制", sub:"たれ · Tare", items:[
+    ["和牛Kalbi","和牛カルビ","¥2,068","入口即化的美味，含有有助于抗衰老的维生素 B。"],
+    ["和牛瘦肉（Rosu）","和牛ロース","¥2,068","非常柔嫩、脂肪较少的黑毛和牛瘦肉，富含维生素和矿物质。"],
+    ["特选Kalbi","特選カルビ","1片 ¥682<br>¥2,728","烤肉的经典之选。"],
+    ["特选西冷","特選ロース","1片 ¥737<br>¥2,838","和牛油脂的甘甜与肉的鲜味完美交融，醇厚浓郁。"],
+    ["特选横膈膜肉（Harami）","特選ハラミ","1片 ¥792<br>¥3,498","浓郁的鲜味与口感令人赞叹。厚切的奢华佳品。","rl"],
+    ["特选菲力","特選ヒレ","¥4,488","脂肪极少的超上等赤身肉。"],
+  ], photos:[["food_tokusen-harami.webp","特选横膈膜肉"]]},
+  {id:"lean", title:"稀有赤身和牛", sub:"希少赤身 · 限量供应", items:[
+    ["和牛 Kuri（肩部）","和牛クリ","¥2,728","脂肪少、滋味浓郁的赤身肉。因形状似栗子（日语“Kuri”）而得名。","rl"],
+    ["和牛 Togarashi（肩部）","和牛トウガラシ","¥2,728","清爽美味的赤身肉。因形状似辣椒（日语“Togarashi”）而得名。","rl"],
+    ["和牛 Shinshin（后腿芯）","和牛シンシン","¥2,728","后腿“Shintama”的中心部分。湿润柔嫩、鲜味满溢的稀有部位。","rl"],
+    ["和牛 Ichibo（臀尖）","和牛イチボ","¥2,728","从后腿延伸至臀部的稀有部位，带有恰到好处的霜降纹理，堪称绝品。","rl"],
+    ["和牛 Tomosankaku（后腿三角）","和牛トモサンカク","¥2,728","被称为“腿肉中的上等Kalbi”，是后腿中油脂比例最佳的稀有部位。","rl"],
+    ["和牛 Misuji（板腱）","和牛ミスジ","¥2,728","肩胛内侧的肉。入口即化的口感，堪称“赤身之王”。","rl"],
+  ], photos:[["food_tomosankaku.webp","和牛 Tomosankaku"]]},
+  {id:"uniku", title:"海胆与牛肉", sub:"うにく（ウニ＋肉）", items:[
+    ["海胆西冷","うにロース","1片 ¥2,090","将快速炙烤的特选西冷包上生海胆、烤海苔和紫苏叶享用。","r"],
+    ["赤身牛肉配生海胆","うに赤","¥2,288","将表面以炭火炙烤至焦香的赤身牛肉做成生拌风味，再配上新鲜生海胆。"],
+  ], photos:[["food_uniloin.webp","海胆西冷"],["food_uniaka.webp","赤身牛肉配生海胆"]]},
+  {id:"liver", title:"新鲜牛肝", sub:"新鮮レバー", caution:"牛肝请务必烤熟后食用。", items:[
+    ["特选牛肝","特選レバー","¥1,848","讲究新鲜度、很容易售罄的人气牛肝。","rl"],
+    ["酱汁牛肝","焼きレバー","¥1,078","浓郁的滋味令人上瘾，富含维生素等营养。"],
+  ], photos:[["food_tokusen-liver.webp","特选牛肝"]]},
+  {id:"miso", title:"味噌腌制", sub:"味噌 · Miso", items:[
+    ["牛皱胃","ギアラ","¥1,078","淡淡的油脂甘甜与嚼劲令人上瘾。","r"],
+    ["上等牛肚","上ミノ","¥1,518","和牛的第一个胃。精心切花的牛肚，每一口都鲜味四溢。"],
+    ["上等牛大肠","上ホルモン","¥1,078","俗称“Tecchan”。请注意不要烤过头。"],
+    ["带脂上等牛小肠","上ホルモン脂付き","¥968","油脂的美味让人着迷。烤时请注意油烟。"],
+  ], photos:[["food_jouhorumon.webp","上等牛大肠"]]},
+  {id:"sausage", title:"香肠", sub:"ソーセージ", items:[
+    ["李昇自制牛舌香肠（4 根）","李昇自家製牛タンソーセージ（4本）","¥968","以粗绞牛舌和严选猪肉自制的香肠。","r"],
+  ]},
+  {id:"grilled-veg", title:"烤蔬菜", sub:"焼野菜", items:[
+    ["梅味噌烤山药配韩国海苔","長芋の梅味噌焼 韓国海苔添え","¥858","将炭火烤制的山药，用自制梅味噌和韩国海苔包着享用。","r"],
+    ["烤蔬菜蘑菇拼盘","焼き野菜ときのこの盛り合わせ","¥902","蔬菜与蘑菇，营养均衡。"],
+  ], photos:[["food_nagaimo.webp","梅味噌烤山药"]]},
+  {id:"rice", title:"米饭", sub:"飯 · Meshi", items:[
+    ["拌饭","ビビンバ","¥1,188","米饭上铺满多种韩式拌菜（Namul），充满蔬菜的鲜味。"],
+    ["牛尾汤泡饭 - 白","テールクッパ 白","¥1,408","突出牛尾高汤风味的浓郁盐味杂炊。"],
+    ["牛尾汤泡饭 - 红","テールクッパ 赤","¥1,518","香辣又营养满分，从身体深处暖起来。"],
+    ["海苔牛尾汤泡饭","テールクッパ 海苔","¥1,518","风味浓郁的韩国烤海苔与葱花，让人食欲大开。","r"],
+    ["烤饭团（2 个）","焼おにぎり（2個）","¥550","已为您烤好。如喜欢更焦香的口感，可放在炭火网上自行再烤一下。"],
+    ["紫苏饭","しそご飯","大 ¥660 / 中 ¥550 / 小 ¥440","让人停不下筷子——紫苏与芝麻碎的绝品米饭。"],
+    ["米饭","ご飯","大 ¥484 / 中 ¥363 / 小 ¥242","使用指定农户种植的大米，米香格外出众。"],
+    ["烤海苔","韓国海苔","¥396","以芝麻油和盐调味的香脆烤海苔。"],
+  ]},
+  {id:"ishiyaki", title:"石锅", sub:"石焼 · Ishiyaki", items:[
+    ["石锅拌饭","石焼きビビンバ","¥1,408","人气第一。请趁热品尝。"],
+    ["石锅蒜香饭","石焼きガーリックライス","¥1,298","加入大量和牛肉的蒜香炒饭。"],
+  ], photos:[["food_ishiyaki-bibimba.webp","石锅拌饭"]]},
+  {id:"unimeshi", title:"海胆饭", sub:"うに飯（ウニ＋肉）", items:[
+    ["赤身牛肉海胆盖饭","うにちらし","¥2,508","将“赤身牛肉配生海胆”铺满米饭，大口享用的幸福盖饭。","r"],
+  ], photos:[["food_uni-chirashi.webp","赤身牛肉海胆盖饭"]]},
+  {id:"soup", title:"汤类", sub:"汁 · Shiru", items:[
+    ["蛋花汤","玉子スープ","¥968","蓬松的蛋花配上芝麻油香，味道温和。"],
+    ["牛尾汤 - 白","テールスープ 白","¥1,298","慢炖 6 小时的盐味牛尾汤，滋味格外出众。"],
+    ["牛尾汤 - 红","テールスープ 赤","¥1,408","昇家经典的收尾汤品。","r"],
+  ], photos:[["food_tailsoup-red.webp","牛尾汤 - 红"]]},
+  {id:"noodles", title:"面类", sub:"麺", items:[
+    ["李昇风味葱丝面","李昇流“ネギそば”","¥1,298","牛尾汤与鲣鱼高汤组合的双重汤底，铺满白葱丝，味道深邃。","r"],
+    ["李昇风味冷面","李昇流“冷麺”","¥1,188","花时间精心熬制的汤头，让人忍不住一饮而尽。"],
+  ], photos:[["food_negisoba.webp","李昇风味葱丝面"]]},
+  {id:"dessert", title:"甜品", sub:"菓子 · Kashi", lead:"均为手工制作，数量有限。", items:[
+    ["招牌昇家布丁","名物 昇家プリン","¥660","使用名古屋交趾鸡蛋，一个个精心烤制的匠心之作。","r"],
+    ["昇家滑嫩布丁","昇家なめらかプリン","¥660","比招牌布丁更加顺滑，敬请品尝。"],
+    ["免烤芝士蛋糕","レアチーズケーキ","¥660","搭配蓝莓酱，口感细腻湿润。"],
+    ["生焦糖冰淇淋","生キャラメルアイス","¥660","在冰凉的意式冰淇淋上淋上热腾腾的生焦糖，绝品冰淇淋。"],
+    ["生提拉米苏","生ティラミス","¥770","使用大量马斯卡彭奶酪的奢华美味。"],
+    ["外带昇家布丁","お持ち帰り昇家プリン","2个 ¥1,512<br>4个 ¥3,024","在日本伴手礼节目中广为人知的布丁。可外带，请随时告知员工。"],
+  ]},
+];
+
+const DRINK = [
+  {id:"beer", title:"啤酒", sub:"ビール", items:[
+    ["生啤酒（Premium Malt's）","生ビール（プレミアムモルツ）","¥803"],
+    ["瓶装啤酒","瓶ビール","¥913","备有多种品牌。"],
+    ["无酒精啤酒（All-Free）","ノンアルコールビール（オールフリー）","¥660"],
+  ]},
+  {id:"tea-hi", title:"茶烧酒", sub:"お茶ハイ · Tea-Hi", items:[
+    ["乌龙茶烧酒","ウーロンハイ","¥770"],["黑乌龙茶烧酒","黒ウーロンハイ","¥770"],
+    ["玉米茶烧酒","コーン茶ハイ","¥770"],["绿茶烧酒","緑茶ハイ","¥770"],
+  ]},
+  {id:"chu-hi", title:"烧酒苏打", sub:"酎ハイ · Chu-Hi", items:[
+    ["鲜柠檬烧酒苏打","生レモンハイ","¥858"],["鲜橙烧酒苏打","生オレンジハイ","¥858"],["可尔必思烧酒苏打","カルピスハイ","¥770"],
+  ]},
+  {id:"fruit", title:"果酒", sub:"果実酒", items:[
+    ["果肉梅酒","あらごし梅酒","¥858"],["果肉柚子酒","あらごし柚子","¥858"],["阳光玫瑰葡萄果酒","シャインマスカット","¥858"],
+  ]},
+  {id:"whisky", title:"威士忌", sub:"ウイスキー", items:[
+    ["知多","知多","¥1,100"],["山崎 NV","山崎NV","¥1,430"],["白州 NV","白州NV","¥1,430"],["百龄坛","バランタイン","¥1,430"],
+  ]},
+  {id:"makgeolli", title:"马格利酒", sub:"マッコリ", items:[
+    ["手工鲜马格利酒“虎”","幻の手作り生マッコリ虎","整瓶 ¥3,630","难得一见的手工未杀菌马格利酒。"],
+  ]},
+  {id:"sake", title:"日本酒", sub:"日本酒", lead:"也可提供热酒。", items:[
+    ["獭祭 纯米大吟酿（山口）","獺祭 純米大吟醸【山口】","180毫升（1合）¥1,518"],
+    ["地底的神秘 大吟酿（秋田）","地底の神秘 大吟醸【秋田】","180毫升（1合）¥1,628"],
+  ]},
+  {id:"shochu", title:"烧酒", sub:"焼酎 · 芋 / 麦 / 米", items:[
+    ["Daiyame 芋烧酒","だいやめ","杯 ¥682<br>瓶 ¥4,180"],
+    ["一刻者 芋烧酒","一刻者","杯 ¥737<br>瓶 ¥4,400"],
+    ["一粒之麦 麦烧酒","一粒の麦","杯 ¥792<br>瓶 ¥4,620"],
+    ["Nakanaka（中々）麦烧酒","中々","杯 ¥792<br>瓶 ¥4,620"],
+    ["拔群 米烧酒","ばつぐん","杯 ¥682<br>瓶 ¥4,180"],
+  ]},
+  {id:"bottle-set", title:"瓶装配料", sub:"ボトルセット", items:[
+    ["乌龙茶","ウーロン茶","¥660"],["苏打水","炭酸","¥660"],["绿茶","緑茶","¥660"],
+    ["日式梅干（腌梅子，6 个）","梅干し（6個）","¥352"],["柠檬片（6 片）","カットレモン（6個）","¥352"],
+  ]},
+  {id:"soft", title:"软饮料", sub:"ソフトドリンク", items:[
+    ["乌龙茶 / 黑乌龙茶 / 绿茶 / 玉米茶 / 可尔必思 / 可乐 / 姜汁汽水 / 橙汁 / 西柚汁 / 苹果汁","ウーロン茶／黒ウーロン茶／緑茶／コーン茶／カルピス／コーラ／ジンジャーエール／オレンジ／グレープフルーツ／りんご","每款 ¥550"],
+  ]},
+  {id:"red-wine", title:"红葡萄酒", sub:"赤ワイン", wine:true, items:[
+    ["Casillero del Diablo Reserva Privada Cabernet Sauvignon","カッシェロ・デル・ディアブロ レセルバ・プリバダ カベルネ・ソーヴィニヨン","¥6,050","优雅的黑加仑香气，伴随樱桃、李子等黑色果实香，以及法国橡木桶带来的香草与杉木的复杂香气。酒体饱满的红葡萄酒。",
+      {o:"智利 迈坡谷 · 酒体饱满",p:"酱汁「和牛Kalbi」「和牛瘦肉（Rosu）」",g:"赤霞珠 85% / 西拉 9% / 品丽珠 6%",a:"香草、黑莓、橡木"}],
+    ["Trivento Golden Reserve Malbec","トリヴェント ゴールデン・リザーブ マルベック","¥9,350","樱桃、草莓等强劲而新鲜的果香，与橡木桶香气平衡融合。酒体饱满的红葡萄酒。",
+      {o:"阿根廷 库约 · 酒体饱满",p:"特选盐味Kalbi、特选盐味西冷",g:"马尔贝克 85% / 其他 15%",a:"草莓、蓝莓、橡木"}],
+    ["Robert Mondavi Private Selection Vint Central Coast Cabernet Sauvignon","ロバート・モンダヴィ プライベート・セレクション ヴィント セントラル・コースト カベルネ・ソーヴィニヨン","¥7,150","以黑色果实为基调，带有太平洋沿岸凉爽气候孕育的红色果实韵味，口感优雅而复杂。",
+      {o:"美国 加利福尼亚 / 中央海岸 · 酒体饱满",p:"特选西冷鲜山葵烧、酱汁「和牛瘦肉（Rosu）」",g:"赤霞珠 86% / 马尔贝克 11% / 小维多 1% / 其他 2%",a:"覆盆子、烘烤香气、咖啡"}],
+    ["Chateau Mercian Mariko Syrah","シャトー・メルシャン 椀子シラー","¥13,200","位于长野县上田市的自家葡萄园“椀子 Vineyard”，在“世界最佳葡萄园 2024”中连续 5 年入选，为日本唯一。宜人的酸度与果味和谐交融。",
+      {o:"日本 长野县 / 上田市椀子葡萄园 · 酒体饱满",p:"特选Kalbi鲜山葵烧、李昇自制牛舌香肠",g:"西拉 100%",a:"白胡椒、黑加仑、苦巧克力"}],
+    ["Chateau Mercian Hokushin Cabernet Sauvignon","シャトー・メルシャン 北信カベルネ・ソーヴィニヨン","¥19,800","深石榴红色，带有熟透的黑莓、黑加仑等黑色果实香气，也能感受到木莓等红色果实的韵味。",
+      {o:"日本 长野县 / 北信地区 · 酒体饱满",p:"和牛 Ichibo、特选西冷鲜山葵烧",g:"赤霞珠 87% / 梅洛 13%",a:"黑莓、黑加仑、巧克力"}],
+    ["Kenzo Estate “rindo”","ケンゾーエステート 紫鈴リンドウ","¥27,500","入口瞬间兼具力量与细腻。随后优雅的酸度与细致水润的单宁如丝绸般顺滑地包裹舌尖，与温和丰富的果味一同在口中扩散。",
+      {o:"美国 加利福尼亚 · 酒体饱满",p:"和牛菲力牛排、特选牛肝",g:"赤霞珠 62% / 梅洛 22% / 小维多 9% / 品丽珠 4% / 马尔贝克 3%",a:"黑樱桃、李子、葡萄干"}],
+    ["Trivento Eolo Malbec","トリヴェント エオロ マルベック","¥68,200","Eolo 是 Trivento 的顶级酒款，也是以世界顶尖马尔贝克酿造的葡萄酒之一。仅从百余年前种植的葡萄园中 4 公顷的地块，逐粒精选当年最好的葡萄酿造。浓郁而优雅。",
+      {o:"阿根廷 门多萨 / 路冉德库约 · 酒体饱满",p:"和牛菲力牛排、特选牛肝",g:"马尔贝克 100%",a:"覆盆子、紫罗兰、黑莓"}],
+    ["Opus One","オーパスワン","¥154,000","由菲利普·德·罗斯柴尔德男爵与罗伯特·蒙大维联手打造。平衡优美、顺滑柔和的单宁与清新的酸度相结合，带来柔软如奶油般的口感。",
+      {o:"美国 加利福尼亚 · 酒体饱满",p:"和牛菲力牛排、肋眼牛排",g:"赤霞珠 84% / 小维多 6% / 梅洛 5% / 品丽珠 4% / 马尔贝克 1%",a:"黑加仑、紫罗兰、黑巧克力"}],
+  ]},
+  {id:"white-wine", title:"白葡萄酒", sub:"白ワイン", wine:true, items:[
+    ["Chateau Mercian Hokushin Chardonnay","シャトー・メルシャン 北信シャルドネ","¥8,800","口中酸度柔和，源自果实的丰腴感与香气相得益彰，展现霞多丽特有的饱满风味。干型白葡萄酒。",
+      {o:"日本 长野县 / 北信地区 · 干型",p:"特选西冷鲜山葵烧、炙烤寿司 2 贯（稀有赤身）",g:"霞多丽 100%",a:"热带水果、黄油、坚果"}],
+    ["Kenzo Estate “asatsuyu”","ケンゾー エステート あさつゆ","¥24,200","活泼的酸度格外突出，明亮清爽，同时带有浓缩新鲜的果味，酒体饱满。芳醇丰腴的余韵悠长，为口中带来舒适的清凉感。",
+      {o:"美国 加利福尼亚 · 干型",p:"盐味特选牛舌、烤蔬菜蘑菇拼盘",g:"长相思 90% / 赛美蓉 10%",a:"柑橘、青柠、白桃"}],
+  ]},
+  {id:"champagne", title:"香槟", sub:"シャンパン", wine:true, items:[
+    ["Champagne Piper-Heidsieck Brut","シャンパーニュ パイパー・エドシック ブリュット","¥13,200","曾献给王后玛丽·安托瓦内特、深受玛丽莲·梦露喜爱的香槟。入口顺滑、平衡良好，果味丰富，优雅迷人。",
+      {o:"法国 香槟区 · 干型",p:"整片烤西冷、特选横膈膜肉",g:"以黑皮诺为主 / 莫尼耶 / 霞多丽",a:"西洋梨、苹果、杏仁"}],
+    ["Champagne Charles Heidsieck Brut Réserve","シャンパーニュ シャルル・エドシック ブリュット レゼルヴ","¥18,700","1859 年波尔多万国博览会金奖。艾森豪威尔、丘吉尔、达利等名人在款待重要宾客时选用。细腻气泡绵延不绝，香气极为复杂诱人。",
+      {o:"法国 香槟区 · 干型",p:"炙烤寿司 2 贯（稀有赤身）、整片烤西冷、特选横膈膜肉",g:"霞多丽 40% / 黑皮诺 40% / 莫尼耶 20%",a:"芒果、杏、开心果"}],
+  ]},
+  {id:"glass-wine", title:"杯装葡萄酒", sub:"グラスワイン", items:[
+    ["杯装起泡酒","グラススパークリング","¥1,078"],
+    ["杯装葡萄酒（红／白）","グラスワイン 赤／白","每款 ¥968"],
+  ]},
+];
+
+// Courses first (recommended), then the order of the current official PDF (Risho_Honkan_WebMenu_EN.pdf). With the short
+// descriptions added, its denser pages are split in two so the text stays readable on a phone.
+const CLASSIC_TITLES = {
+  en: ["Course Menu", "Chef's Recommendations", "Sashimi & Sushi", "Vegetables & Kimchi", "Salt-Seasoned", "Fresh Wasabi & Steak", "Sauce-Marinated", "Rare Lean Wagyu", "Sea Urchin, Liver & Miso", "Grilled Vegetables & Stone-Pot Rice", "Rice", "Soups & Noodles", "Desserts", "Drinks", "Drinks", "Red Wine", "Red Wine", "White Wine & Champagne"],
+  ja: ["コース", "料理長のおすすめ", "刺身・寿司", "生野菜・キムチ", "塩味の料理", "生わさび・ステーキ", "たれ味の料理", "希少な和牛の赤身", "うにく・レバー・味噌", "焼き野菜・石焼き", "ご飯もの", "スープ・麺", "デザート", "ドリンク", "ドリンク", "赤ワイン", "赤ワイン", "白ワイン・シャンパン"],
+  "zh-Hans": ["套餐", "主厨推荐", "刺身・寿司", "新鲜蔬菜・泡菜", "盐味", "鲜山葵・牛排", "酱汁腌制", "稀有赤身和牛", "海胆与牛肉・牛肝・味噌", "烤蔬菜・石锅", "米饭", "汤类・面类", "甜品", "饮品", "饮品", "红葡萄酒", "红葡萄酒", "白葡萄酒・香槟"],
+  ko: ["코스요리", "셰프 추천", "회・초밥", "생야채・김치", "소금", "생와사비・스테이크", "양념", "와규 희소 살코기", "우니쿠・간・된장", "구운 야채・돌솥", "밥", "국물요리・면요리", "디저트", "음료", "음료", "레드 와인", "레드 와인", "화이트 와인・샴페인"],
+};
+const CLASSIC = [
+  ["course"], ["special"], ["sashimi", "sushi"], ["vegetables", "pickles"], ["shio"], ["wasabi", "steak"],
+  ["tare"], ["lean"], ["uniku", "liver", "miso"], ["sausage", "grilled-veg", "ishiyaki", "unimeshi"], ["rice"],
+  ["soup", "noodles"], ["dessert"],
+  ["beer", "tea-hi", "chu-hi", "fruit", "whisky", "bottle-set"], ["makgeolli", "sake", "shochu", "soft"],
+  ["red-wine:0-4"], ["red-wine:4-8"], ["white-wine", "champagne", "glass-wine"],
+].map((secs, i) => ({title: CLASSIC_TITLES[L.lang][i], secs}));
+// this version keeps only the official descriptions: undo the lines added for the new design
+// (in English they live apart in DESC, so only the Japanese check copy needs this)
+if (L.lang === "ja") FOOD.forEach(s => s.items.forEach(it => {
+  if (typeof it[3] !== "string") return;
+  it[3] = it[3].replace("海苔で巻いてお召し上がりください。", "");
+  if (it[1] === "生塩タンアゴ") it[3] = "コリコリの食感と溢れる旨み。アゴが外れる美味しさ。";
+}));
+const CLASSIC_TEXT = {
+  en: {foot: "All prices include tax. Show the Japanese name to staff when ordering.", each: "each", min2: "Min. 2 slices"},
+  ja: {foot: "価格はすべて税込です。ご注文の際は日本語の品名をスタッフにお見せください。", each: "各", min2: "2枚からご注文いただけます"},
+  "zh-Hans": {foot: "价格均含税。点餐时请向员工出示日文菜名。", each: "每款", min2: "2片起点", cjk: "Noto Serif SC"},
+  ko: {foot: "가격은 모두 세금 포함입니다. 주문 시 일본어 메뉴명을 직원에게 보여 주세요.", each: "각", min2: "2점부터 주문 가능", cjk: "Noto Serif KR"},
+}[L.lang];
+L.classicFoot = CLASSIC_TEXT.foot;
+L.each = CLASSIC_TEXT.each;
+L.min2 = L.min2 || CLASSIC_TEXT.min2;
+if (CLASSIC_TEXT.cjk) L.cjk = CLASSIC_TEXT.cjk;
+
+// How a drink is served (fruit liqueur, shochu, whisky): shown on every menu,
+// and on the order-list version the guest picks one when adding a glass.
+const STYLED = {fruit: "std", shochu: "std", whisky: "whisky"};  // section id -> set of styles
+const STYLE_SETS = {std: ["rock", "water", "hot", "soda"], whisky: ["rock", "water", "hot", "highball"]};
+const STYLE_TEXT = {
+  en: {title: "How would you like it?", rock: "On the rocks", water: "With water", hot: "With hot water", soda: "With soda", highball: "Highball",
+       bottleHint: "For a bottle, mixers are on the", bottleSet: "Bottle Set"},
+  ja: {title: "飲み方", rock: "ロック", water: "水割り", hot: "お湯割り", soda: "ソーダ割り", highball: "ハイボール",
+       bottleHint: "ボトルの割り材は", bottleSet: "ボトルセット"},
+  "zh-Hans": {title: "饮用方式", rock: "加冰", water: "兑水", hot: "兑热水", soda: "兑苏打水", highball: "嗨棒（兑苏打水）"},
+  ko: {title: "드시는 방법", rock: "온더록", water: "물 타서", hot: "뜨거운 물 타서", soda: "소다 타서", highball: "하이볼"},
+};
+const ST = STYLE_TEXT[L.lang] || STYLE_TEXT.en;
+const STAFF_STYLE = STYLE_TEXT.ja;  // the staff screen is always in Japanese
+const stylesOf = sec => (STYLE_SETS[STYLED[sec.id]] || []);
+const styleLine = sec => stylesOf(sec).map(k => ST[k]).join(" / ");
+
+
+// courses come first on every menu
+FOOD.sort((a, b) => (b.id === "course") - (a.id === "course"));
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const SEC = Object.fromEntries([...FOOD, ...DRINK].map(s => [s.id, s]));
+const rec = `<img src="${IMG}menu-recommendation.svg" alt="${esc(L.rec)}">`;
+
+function rowHTML(it, sec){
+  let [name, jp, price, desc, flags, extra] = it;
+  if (flags && typeof flags === "object") [flags, extra] = ["", flags];
+  const f = typeof flags === "string" ? flags : "";
+  // the short description from the official Japanese menu (translated); courses list their dishes,
+  // wines show origin + description. Texts added for the new design (DESC in en-v2.js) are not used here.
+  const x = sec.course && Array.isArray(extra) ? extra.join(", ")
+          : sec.wine && extra ? [extra.o, desc].filter(Boolean).join(" — ")
+          : desc || "";
+  // "1 slice ¥968<br>¥4,048": the whole plate large, the per-slice price small with "min. 2"
+  const parts = price.split("<br>");
+  const p = parts.length === 2 && /^¥[\d,]+$/.test(parts[1])
+    ? `${parts[1]}<small>${parts[0]}${/slice|一切れ|片|점/.test(parts[0]) && L.min2 ? ` · ${L.min2}` : ""}</small>` : parts.join("<br>");
+  return `<div class="row"><div><div class="n">${f.includes("r") ? rec : ""}${esc(name)}${f.includes("l") ? `<span class="lim">${esc(L.lim)}</span>` : ""}</div>
+    <div class="j" lang="ja">${esc(jp)}</div>${x ? `<div class="x">${esc(x)}</div>` : ""}</div>
+    <div class="p">${p}${sec.wine ? `<small>${esc(L.bottle)}</small>` : ""}</div></div>`;
+}
+
+// drinks: neighbouring items with the same price and no description share one row
+// ("Fresh Lemon Sour / Fresh Orange Sour … each ¥858"), as on the current PDF
+function compact(sec){
+  if (sec.wine || !DRINK.some(d => d.id === sec.id)) return sec.items;
+  const out = [];
+  for (const it of sec.items) {
+    const last = out[out.length - 1];
+    if (last && !it[3] && !last[3] && last[2].replace(/^\S+ (?=¥)/, "") === it[2] && !/<br>/.test(it[2]))
+      out[out.length - 1] = [`${last[0]} / ${it[0]}`, `${last[1]}／${it[1]}`, `${L.each} ${it[2]}`];
+    else out.push(it);
+  }
+  return out;
+}
+
+const total = CLASSIC.length;
+document.getElementById("pages").innerHTML = CLASSIC.map((pg, i) => `<section class="page">
+  <div class="top"><img src="${IMG}trademark-restaurant-risho-honkan.svg" alt="李昇 本館"><div class="store">${esc(L.h1)}<br>Menu</div></div>
+  <h1>${esc(pg.title)}</h1>
+  <div class="body">${pg.secs.map(ref => {
+    // "red-wine:0-4" = items 0..3 of a section that is split over two pages
+    const [id, range] = ref.split(":"), whole = SEC[id];
+    const [a, z] = range ? range.split("-").map(Number) : [0, whole.items.length];
+    const s = {...whole, items: whole.items.slice(a, z)};
+    const head = pg.secs.length > 1 ? `<h2>${esc(s.title)}<span lang="ja">${esc(s.sub.split(" · ")[0])}</span></h2>` : "";
+    const st = stylesOf(s).length ? `<div class="styles">${esc(ST.title)}：${esc(styleLine(s))}</div>` : "";
+    return head + st + compact(s).map(it => rowHTML(it, s)).join("");
+  }).join("")}</div>
+  <div class="foot"><span>${rec} ${esc(L.rec)} · ${esc(L.classicFoot)}</span><span>${i + 1} / ${total}</span></div>
+</section>`).join("");
+
+document.documentElement.lang = L.lang;
+if (L.cjk) document.documentElement.style.setProperty("--cjk", `"${L.cjk}"`);
+document.title = L.title;
+// shrink a page's text until its list fits the page
+function fit(){
+  document.querySelectorAll(".page").forEach(pg => {
+    let k = 1;
+    pg.style.setProperty("--k", k);
+    const body = pg.querySelector(".body");
+    while (body.scrollHeight > body.clientHeight + 1 && k > 0.7) {
+      k = Math.round((k - 0.02) * 100) / 100;
+      pg.style.setProperty("--k", k);
+    }
+  });
+}
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(fit);
+</script>
+</body>
+</html>
