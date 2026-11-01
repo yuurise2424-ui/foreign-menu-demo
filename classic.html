@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Risho Main Store Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Shippori+Mincho:wght@500;700&family=Noto+Serif+SC:wght@400;600&family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Same page plan as the current official PDF (Risho_Honkan_WebMenu_EN.pdf, 12 pages of 9:16),
+   redrawn in the new design: name + Japanese name on the left, price on the right, no descriptions. */
+:root{--paper:#f8f5ef;--ink:#1d1b18;--sub:#6f685e;--rule:#d8d1c5;--red:#8e1f1a;--k:1}
+@page{size:152.4mm 270.93mm;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{background:#8a8580;font-family:"Source Serif 4",var(--cjk,"Shippori Mincho"),"Shippori Mincho",serif;color:var(--ink)}
+.page{width:152.4mm;height:270.93mm;margin:24px auto;background:var(--paper);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;padding:13mm 11mm 9mm;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+@media print{body{background:none}.page{margin:0;box-shadow:none;break-after:page}}
+.top{display:flex;align-items:center;justify-content:space-between;padding-bottom:5mm;border-bottom:1px solid var(--ink)}
+.top img{height:13mm;filter:brightness(0)}
+.top .store{font-size:9pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--sub);text-align:right;line-height:1.5}
+h1{font-weight:600;font-size:calc(21pt*var(--k));line-height:1.2;margin-top:6mm}
+h1::after{content:"";display:block;width:12mm;height:1px;background:var(--red);margin-top:3mm}
+.body{flex:1;min-height:0;margin-top:3mm}
+h2{font-size:calc(10pt*var(--k));font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--red);
+  margin-top:calc(5mm*var(--k));padding-bottom:1mm;display:flex;gap:6px;align-items:baseline}
+h2 span{font-family:"Shippori Mincho",serif;letter-spacing:.1em;color:var(--sub);font-size:.95em}
+.styles{font-size:calc(9.5pt*var(--k));color:#3b3732;margin:1mm 0 .5mm}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:4mm;padding:calc(2.2mm*var(--k)) 0;border-bottom:1px solid var(--rule)}
+.row .n{font-weight:600;font-size:calc(14pt*var(--k));line-height:1.3}
+.row .n img{width:calc(13pt*var(--k));height:auto;vertical-align:-1px;margin-right:4px}
+.row .lim{font-size:calc(8pt*var(--k));letter-spacing:.12em;text-transform:uppercase;color:var(--red);border:1px solid var(--red);padding:0 4px;margin-left:5px;vertical-align:2px;font-weight:400}
+.row .j{font:700 calc(10.5pt*var(--k)) "Shippori Mincho",serif;color:#4a443c;letter-spacing:.06em;margin-top:.5mm}
+.row .x{font-size:calc(10.5pt*var(--k));color:#3b3732;margin-top:.6mm;line-height:1.35}
+.row .p{white-space:nowrap;text-align:right;font-size:calc(13.5pt*var(--k));line-height:1.35;flex:none}
+.row .p small{display:block;font-size:calc(9pt*var(--k));color:var(--sub)}
+.foot{display:flex;justify-content:space-between;font-size:7.5pt;color:var(--sub);padding-top:3mm;border-top:1px solid var(--rule)}
+.foot img{width:9pt;vertical-align:-1px}
+</style>
+</head>
+<body><div style="background:#1d1b18;color:#f8f5ef;font:12px/1.5 sans-serif;text-align:center;padding:6px 12px">提案用の試作です（正式なメニューではありません） · Prototype for internal review</div>
+<div id="pages"></div>
+<script>
+const IMG = "https://www.shoya.com/.assets/";
+const L = {
+  lang:"en", font:"Noto Serif JP", title:"Risho Main Store Menu",
+  note:"Proposal mockup — not an official page. 提案用の試作です（公式ページではありません）",
+  kicker:"MENU", h1:"Risho Main Store",
+  intro:"All prices include tax. Each dish also shows its Japanese name — feel free to point to it when ordering.",
+  food:"FOOD MENU", drink:"DRINK MENU", drinksNav:"Drinks",
+  footer:"Yakiniku Shoya — Risho Main Store · Prices include tax · Menu items and prices may change.",
+  rec:"Our recommendation", recExplain:"This mark shows our recommendations.", recLegend:"Our recommendation", lim:"Limited", bottle:"bottle", taxIncl:"tax incl.", pairs:"Pairs with", grapes:"Grapes", aromas:"Aromas",
+};
+// i: [name, Japanese name, price(s), description, flags]
+// flags: r = recommended, l = limited quantity
+const FOOD = [
+  {id:"special", title:"Risho's Special Dishes", sub:"李昇 本館の逸品", lead:"Our chef's top picks — a great introduction to Risho's signature dishes.", items:[
+    ["Aka & Raw Sea Urchin","うに赤","¥2,288","Charcoal-seared lean beef prepared yukhoe-style, crowned with fresh raw sea urchin."],
+    ["Special Beef Tongue","特選タン","¥4,048","Tender, thick-cut slices from a rare, fresh Japanese Black Wagyu tongue — only a small amount comes from each tongue."],
+    ["Special Sirloin with Wasabi","特選ロースのわさび焼き","¥3,168","Topped with plenty of freshly grated real wasabi. Enjoy with a touch of soy sauce."],
+    ["Wagyu Tenderloin Steak","和牛ヒレステーキ","¥5,038","A rare cut — only a tiny amount comes from each animal."],
+    ["Wagyu Kuri (Shoulder Clod)","和牛クリ","¥2,728","Lean meat with little fat and a deep, rich flavor. Named for its chestnut (kuri) shape."],
+    ["Wagyu Misuji (Oyster Blade)","和牛ミスジ","¥2,728","From the inside of the shoulder. Its melt-in-your-mouth texture makes it the “King of Lean.”"],
+    ["Aka & Raw Sea Urchin Bowl","うにちらし","¥2,508","Our Uni-Aka piled over rice. Pure bliss in a bowl."],
+    ["Shoya's Smooth Pudding","昇家なめらかプリン","¥660","Even smoother than our signature pudding — a must-try."],
+  ]},
+  {id:"course", title:"Course Menu", sub:"宴 · Utage", lead:"Treat yourself to a blissful meat feast — Risho's set courses.", course:true, caution:"Courses are for 2 or more guests, and everyone at the table orders the same course.", items:[
+    ["Course A","Aコース","¥7,700","",0,["Assorted kimchi","Salad","Signature green-onion salad","Salted beef tongue with green onion","2 kinds of salted offal","Special Wagyu with wasabi","3 rare lean cuts with tare sauce","Pure-breed Nagoya Cochin chicken","Stone-pot bibimbap","Shoya smooth pudding"]],
+    ["Course B","Bコース","¥9,900","","r",["Assorted kimchi","Salad","Lean beef yukhoe","Special tongue platter","2 kinds of salted offal","Sea urchin & sirloin","Premium sirloin","4 special lean cuts with tare sauce","Stone-pot bibimbap","Shoya smooth pudding"]],
+    ["Premium Course","Premiumコース","¥14,300","",0,["Assorted kimchi","Salad","Beef tripe sashimi","Special tongue platter","2 kinds of salted offal","Sea urchin & sirloin","Special Wagyu with wasabi","Special tenderloin","3 special cuts with tare sauce","Stone-pot bibimbap","Shoya smooth pudding"]],
+    ["Chef's Choice Course","おまかせコース","from ¥16,500","Please ask our staff for details."],
+  ], addon:"All-you-can-drink (90 minutes): add to any course for +¥2,750. Not every drink on this menu is included — we will bring you a separate all-you-can-drink menu."},
+  {id:"sashimi", title:"Sashimi", sub:"刺身", items:[
+    ["Sliced Raw Beef Tripe","ミノ刺し","¥1,188","Refreshing beef tripe with an outstanding texture."],
+    ["Raw Beef Omasum","センマイ刺し","¥1,188","Cut using our signature technique to bring out its flavor. Enjoy with our homemade vinegared miso sauce."],
+    ["Aka Beef Yukhoe","赤身ユッケ","¥1,518","Lean beef seared over charcoal and prepared yukhoe-style."],
+    ["Toro Aka","トロ赤","¥1,518","Beef seasoned with a Japanese-style sauce. Wrap it in shiso leaf and daikon radish to eat.","r"],
+    ["Raw Beef Tongue with Egg Yolk","玉タン刺し","¥1,848","Rare Japanese beef tongue, mixed with egg and served with our special soy sauce."],
+  ]},
+  {id:"sushi", title:"Sushi", sub:"寿司", items:[
+    ["Seared Sushi, 2 pieces (rare lean Wagyu)","炙り寿司 2貫盛り（希少赤身使用）","¥1,188","Served on rice seasoned especially for lean beef. Add plenty of freshly grated real wasabi and enjoy with green onion sprouts.","r"],
+  ], photos:[["food_aburisushi.webp","Seared Sushi (2 pieces)"]]},
+  {id:"vegetables", title:"Raw Vegetables", sub:"生野菜", items:[
+    ["Signature Green Onion Salad","名物ネギ盛","¥792","Crisp green onion dressed generously with fragrant sesame oil.","r"],
+    ["Korean Lettuce (Sangchu)","サンチュ","¥748","A yakiniku classic — wrap your grilled meat in it."],
+    ["Risho's Salad – White","李昇サラダ 白","¥858","Fresh vegetables with our homemade grated-yam (tororo) dressing."],
+    ["Risho's Salad – Seaweed","李昇サラダ 海苔","¥913","A savory salt-seasoned salad loaded with Korean seaweed and toasted sesame oil — perfect with drinks."],
+  ], photos:[["food_negimori.webp","Signature Green Onion Salad"]]},
+  {id:"pickles", title:"Kimchi & Namul", sub:"漬物 · Tsukemono", items:[
+    ["Kimchi / Radish Kimchi / Cucumber Kimchi","キムチ／カクテキ／オイキムチ","each ¥638","The secret of their popularity: just the right heat, with deep, layered flavor."],
+    ["Assorted Kimchi","キムチ盛り合わせ","¥1,078","A platter of three carefully prepared varieties of kimchi.","r"],
+    ["Assorted Namul","ナムル盛り合わせ","¥858","Seasoned vegetable side dishes with addictive textures. Also available individually."],
+  ]},
+  {id:"shio", title:"Salt-Seasoned", sub:"塩 · Shio", items:[
+    ["Signature Salted Beef Abomasum (Horumon)","名物塩ホルモン","¥1,078","Our specialty since the day we opened — offal like nowhere else.","r"],
+    ["Fresh Salted Beef Tongue with Green Onion","ネギ生塩タン","¥2,178","We check the quality of every tongue and cut each slice carefully by hand."],
+    ["Special Beef Tongue","特選タン","1 slice ¥968<br>¥4,048","Tender, thick-cut slices from a rare, fresh Japanese Black Wagyu tongue — only a small amount comes from each tongue.","l"],
+    ["Fresh Salted Tongue Underside (Tan-Ago)","生塩タンアゴ","¥1,848","A crunchy texture and overflowing flavor — so good your jaw will drop.","l"],
+    ["Salted Beef Tripe","塩ミノ","¥1,848","Fine tripe, carefully sliced thin. Sear it quickly and enjoy."],
+    ["Special Salted Kalbi","特選塩カルビ","1 slice ¥682<br>¥2,728","Tender meat and flavorful fat — both of the finest quality."],
+    ["Special Salted Sirloin","特選塩ロース","1 slice ¥737<br>¥2,838","Seasoned simply with salt and pepper so you can enjoy the meat's natural flavor."],
+    ["Special Salted Outside Skirt (Harami)","特選塩ハラミ","1 slice ¥792<br>¥3,498","Rare beef diaphragm. Juicy flavor fills your mouth with every bite.","l"],
+    ["Pure-breed Nagoya Cochin Chicken with Salt","純系名古屋コーチン塩焼き","¥2,068","Nagoya's pride: purebred Nagoya Cochin chicken."],
+  ], photos:[["food_shio-horumon.webp","Signature Salted Beef Abomasum (Horumon)"],["food_shio-mino.webp","Salted Beef Tripe"]]},
+  {id:"wasabi", title:"Fresh Wasabi", sub:"生わさび · Nama-Wasabi", items:[
+    ["Special Kalbi with Wasabi","特選カルビのわさび焼き","¥3,058","Just the right amount of fat — a perfect match for aromatic fresh wasabi."],
+    ["Special Sirloin with Wasabi","特選ロースのわさび焼き","¥3,168","Topped with plenty of freshly grated real wasabi. Enjoy with a touch of soy sauce.","r"],
+    ["Special Outside Skirt with Wasabi","特選ハラミのわさび焼き","¥3,828","Premium skirt steak eaten with fresh real wasabi — truly blissful.","l"],
+  ], photos:[["food_tokusen-loin-wasabiyaki.webp","Special Sirloin with Wasabi"]]},
+  {id:"steak", title:"Steak", sub:"ステーキ", items:[
+    ["Salted Beef Tongue Steak","塩タンステーキ","¥1,958","Tender salted tongue, served boldly as a steak."],
+    ["Rib Eye Steak","リブ芯ステーキ","¥2,948","Only the prized center cut of premium rib roast.","r"],
+    ["Wagyu Tenderloin Steak","和牛ヒレステーキ","¥5,038","A rare cut — only a tiny amount comes from each animal."],
+  ], photos:[["food_rib-steak.webp","Rib Eye Steak"]]},
+  {id:"tare", title:"Sauce-Marinated", sub:"たれ · Tare", items:[
+    ["Wagyu Kalbi","和牛カルビ","¥2,068","Melts in your mouth. Contains B vitamins."],
+    ["Wagyu Rosu (Lean Cut)","和牛ロース","¥2,068","Very tender, lean Japanese Black Wagyu, rich in vitamins and minerals."],
+    ["Special Kalbi","特選カルビ","1 slice ¥682<br>¥2,728","The king of yakiniku."],
+    ["Special Sirloin","特選ロース","1 slice ¥737<br>¥2,838","Rich and full-bodied — sweet Wagyu fat perfectly blended with savory meat."],
+    ["Special Outside Skirt (Harami)","特選ハラミ","1 slice ¥792<br>¥3,498","Thick-cut and luxurious, with a rich flavor and texture you'll savor.","rl"],
+    ["Special Tenderloin","特選ヒレ","¥4,488","Ultra-premium lean meat with very little fat."],
+  ], photos:[["food_tokusen-harami.webp","Special Outside Skirt"]]},
+  {id:"lean", title:"Rare Lean Wagyu", sub:"希少赤身 · Limited quantity", items:[
+    ["Wagyu Kuri (Shoulder Clod)","和牛クリ","¥2,728","Lean meat with little fat and a deep, rich flavor. Named for its chestnut (kuri) shape.","rl"],
+    ["Wagyu Togarashi (Chuck Tender)","和牛トウガラシ","¥2,728","Light yet delicious lean meat. Named for its chili-pepper (togarashi) shape.","rl"],
+    ["Wagyu Shinshin (Knuckle Heart)","和牛シンシン","¥2,728","The center of the round. Moist, tender and full of flavor — a rare cut.","rl"],
+    ["Wagyu Ichibo (Rump Cap)","和牛イチボ","¥2,728","A rare cut from the rump, with beautiful, well-balanced marbling.","rl"],
+    ["Wagyu Tomosankaku (Tri-Tip)","和牛トモサンカク","¥2,728","Called the “premium kalbi” of the round — the best fat balance of any round cut.","rl"],
+    ["Wagyu Misuji (Oyster Blade)","和牛ミスジ","¥2,728","From the inside of the shoulder. Its melt-in-your-mouth texture makes it the “King of Lean.”","rl"],
+  ], photos:[["food_tomosankaku.webp","Wagyu Tomosankaku"]]},
+  {id:"uniku", title:"Uniku (Sea Urchin + Beef)", sub:"うにく", items:[
+    ["Special Sirloin & Raw Sea Urchin","うにロース","1 piece ¥2,090","Quickly sear the special sirloin, then wrap it with raw sea urchin, toasted nori and a shiso leaf.","r"],
+    ["Aka & Raw Sea Urchin","うに赤","¥2,288","Charcoal-seared lean beef prepared yukhoe-style, crowned with fresh raw sea urchin."],
+  ], photos:[["food_uniloin.webp","Special Sirloin & Raw Sea Urchin"],["food_uniaka.webp","Aka & Raw Sea Urchin"]]},
+  {id:"liver", title:"Fresh Liver", sub:"新鮮レバー", caution:"Liver must always be fully grilled before eating.", items:[
+    ["Special Beef Liver","特選レバー","¥1,848","Our popular liver, chosen for its freshness — it always sells out.","rl"],
+    ["Beef Liver with Sauce","焼きレバー","¥1,078","Rich, addictive flavor, packed with vitamins and nutrients."],
+  ], photos:[["food_tokusen-liver.webp","Special Beef Liver"]]},
+  {id:"miso", title:"Miso-Marinated", sub:"味噌 · Miso", items:[
+    ["Beef Abomasum (Giara)","ギアラ","¥1,078","Subtly sweet fat with an addictive chew.","r"],
+    ["Premium Beef Tripe (Jo-Mino)","上ミノ","¥1,518","Wagyu's first stomach, carefully scored so flavor bursts out with every bite."],
+    ["Premium Beef Large Intestine (Jo-Horumon)","上ホルモン","¥1,078","Known as “tecchan.” Be careful not to overcook."],
+    ["Premium Beef Small Intestine with Fat","上ホルモン脂付き","¥968","You'll fall for the rich fat. Watch out for the smoke!"],
+  ], photos:[["food_jouhorumon.webp","Premium Beef Large Intestine"]]},
+  {id:"sausage", title:"Sausage", sub:"ソーセージ", items:[
+    ["Risho's Homemade Beef Tongue Sausage (4)","李昇自家製牛タンソーセージ（4本）","¥968","Homemade coarse-ground sausage of beef tongue and carefully selected pork.","r"],
+  ]},
+  {id:"grilled-veg", title:"Grilled Vegetables", sub:"焼野菜", items:[
+    ["Grilled Yam with Plum-Miso & Korean Seaweed","長芋の梅味噌焼 韓国海苔添え","¥858","Charcoal-grilled Chinese yam, wrapped in our homemade plum miso and Korean seaweed.","r"],
+    ["Assorted Grilled Vegetables & Mushrooms","焼き野菜ときのこの盛り合わせ","¥902","A well-balanced mix of vegetables and mushrooms."],
+  ], photos:[["food_nagaimo.webp","Grilled Yam with Plum-Miso"]]},
+  {id:"rice", title:"Rice", sub:"飯 · Meshi", items:[
+    ["Bibimbap","ビビンバ","¥1,188","Rice topped with an assortment of our namul (seasoned vegetables), full of vegetable goodness."],
+    ["Beef Tail Rice Soup – White","テールクッパ 白","¥1,408","A rich, salt-based rice porridge that brings out the oxtail broth."],
+    ["Beef Tail Rice Soup – Red","テールクッパ 赤","¥1,518","Spicy and nourishing — warms you to the core."],
+    ["Beef Tail Rice Soup – Seaweed","テールクッパ 海苔","¥1,518","Fragrant toasted Korean seaweed and chopped green onion whet your appetite.","r"],
+    ["Grilled Rice Balls (2)","焼おにぎり（2個）","¥550","Already grilled for you. For a crispier crust, toast them a little more on your charcoal grill."],
+    ["Rice with Shiso","しそご飯","L ¥660 / M ¥550 / S ¥440","You won't be able to put your chopsticks down — shiso and ground sesame rice."],
+    ["Steamed Rice","ご飯","L ¥484 / M ¥363 / S ¥242","Exceptionally tasty rice from select partner farms."],
+    ["Korean Seaweed","韓国海苔","¥396","Toasted seaweed seasoned with sesame oil and salt."],
+  ]},
+  {id:"ishiyaki", title:"Stone-Pot Rice", sub:"石焼 · Ishiyaki", items:[
+    ["Stone-Pot Bibimbap","石焼きビビンバ","¥1,408","Our No.1 most popular dish. Enjoy it sizzling hot."],
+    ["Stone-Pot Garlic Rice","石焼きガーリックライス","¥1,298","Garlic rice packed with Wagyu beef."],
+  ], photos:[["food_ishiyaki-bibimba.webp","Stone-Pot Bibimbap"]]},
+  {id:"unimeshi", title:"Sea Urchin Rice", sub:"うに飯 · Unimeshi", items:[
+    ["Aka & Raw Sea Urchin Bowl","うにちらし","¥2,508","Our Uni-Aka piled over rice. Pure bliss in a bowl.","r"],
+  ], photos:[["food_uni-chirashi.webp","Aka & Raw Sea Urchin Bowl"]]},
+  {id:"soup", title:"Soup", sub:"汁 · Shiru", items:[
+    ["Egg Drop Soup","玉子スープ","¥968","Fluffy egg with a gentle hint of sesame oil."],
+    ["Beef Tail Soup – White","テールスープ 白","¥1,298","Salt-based oxtail soup, slowly simmered for six hours. Exceptional."],
+    ["Beef Tail Soup – Red","テールスープ 赤","¥1,408","Shoya's classic soup to finish your meal.","r"],
+  ], photos:[["food_tailsoup-red.webp","Beef Tail Soup – Red"]]},
+  {id:"noodles", title:"Noodles", sub:"麺", items:[
+    ["Risho-style Green Onion Noodles","李昇流“ネギそば”","¥1,298","A double soup of oxtail broth and bonito broth, topped with a mound of finely shredded leek. Deep and rich.","r"],
+    ["Risho-style Cold Noodles (Naengmyeon)","李昇流“冷麺”","¥1,188","A carefully prepared broth so addictive you'll want to drink every drop."],
+  ], photos:[["food_negisoba.webp","Risho-style Green Onion Noodles"]]},
+  {id:"dessert", title:"Desserts", sub:"菓子 · Kashi", lead:"All handmade, so quantities are limited.", items:[
+    ["Signature Shoya Pudding","名物 昇家プリン","¥660","Made with Nagoya Cochin eggs and baked one by one with care — our masterpiece.","r"],
+    ["Shoya's Smooth Pudding","昇家なめらかプリン","¥660","Even smoother than our signature pudding — a must-try."],
+    ["No-Bake Cheesecake","レアチーズケーキ","¥660","A moist no-bake cheesecake finished with blueberry sauce."],
+    ["Soft Caramel Ice Cream","生キャラメルアイス","¥660","Cold gelato topped with piping-hot soft caramel."],
+    ["Fresh Tiramisu","生ティラミス","¥770","A luxurious treat made with plenty of mascarpone."],
+    ["Shoya Pudding to Go","お持ち帰り昇家プリン","2 pcs ¥1,512<br>4 pcs ¥3,024","The pudding featured on Japanese TV souvenir shows. Available for takeaway — just ask our staff."],
+  ]},
+];
+
+const DRINK = [
+  {id:"beer", title:"Beer", sub:"ビール", items:[
+    ["Draft Beer (The Premium Malt's)","生ビール（プレミアムモルツ）","¥803"],
+    ["Bottled Beer","瓶ビール","¥913","Various brands available."],
+    ["Non-Alcoholic Beer (All-Free)","ノンアルコールビール（オールフリー）","¥660"],
+  ]},
+  {id:"tea-hi", title:"Shochu & Tea", sub:"お茶ハイ · Tea-Hi", items:[
+    ["Shochu with Oolong Tea","ウーロンハイ","¥770"],["Shochu with Black Oolong Tea","黒ウーロンハイ","¥770"],
+    ["Shochu with Corn Tea","コーン茶ハイ","¥770"],["Shochu with Green Tea","緑茶ハイ","¥770"],
+  ]},
+  {id:"chu-hi", title:"Chu-Hi", sub:"酎ハイ", items:[
+    ["Fresh Lemon Sour","生レモンハイ","¥858"],["Fresh Orange Sour","生オレンジハイ","¥858"],["Calpis Sour","カルピスハイ","¥770"],
+  ]},
+  {id:"fruit", title:"Fruit Liqueur", sub:"果実酒", items:[
+    ["Pulpy Umeshu (Plum Wine)","あらごし梅酒","¥858"],["Pulpy Yuzu Liqueur","あらごし柚子","¥858"],["Shine Muscat Liqueur","シャインマスカット","¥858"],
+  ]},
+  {id:"whisky", title:"Whisky", sub:"ウイスキー", items:[
+    ["Chita","知多","¥1,100"],["Yamazaki NV","山崎NV","¥1,430"],["Hakushu NV","白州NV","¥1,430"],["Ballantine's","バランタイン","¥1,430"],
+  ]},
+  {id:"makgeolli", title:"Makgeolli", sub:"マッコリ", items:[
+    ["Handmade Fresh Makgeolli “Tora”","幻の手作り生マッコリ虎","Bottle ¥3,630","A rare handmade, unpasteurized makgeolli."],
+  ]},
+  {id:"sake", title:"Sake", sub:"日本酒", lead:"Hot sake also available.", items:[
+    ["Dassai Junmai Daiginjo (Yamaguchi)","獺祭 純米大吟醸【山口】","180 ml (1 go) ¥1,518"],
+    ["Chitei no Shinpi Daiginjo (Akita)","地底の神秘 大吟醸【秋田】","180 ml (1 go) ¥1,628"],
+  ]},
+  {id:"shochu", title:"Shochu", sub:"焼酎 · Sweet potato / Barley / Rice", items:[
+    ["Daiyame (sweet potato)","だいやめ","Glass ¥682<br>Bottle ¥4,180"],
+    ["Ikkomon (sweet potato)","一刻者","Glass ¥737<br>Bottle ¥4,400"],
+    ["Hitotsubu no Mugi (barley)","一粒の麦","Glass ¥792<br>Bottle ¥4,620"],
+    ["Nakanaka (barley)","中々","Glass ¥792<br>Bottle ¥4,620"],
+    ["Batsugun (rice)","ばつぐん","Glass ¥682<br>Bottle ¥4,180"],
+  ]},
+  {id:"bottle-set", title:"Bottle Set", sub:"ボトルセット", items:[
+    ["Oolong Tea","ウーロン茶","¥660"],["Soda","炭酸","¥660"],["Green Tea","緑茶","¥660"],
+    ["Pickled Plums (6)","梅干し（6個）","¥352"],["Lemon Wedges (6)","カットレモン（6個）","¥352"],
+  ]},
+  {id:"soft", title:"Soft Drinks", sub:"ソフトドリンク", items:[
+    ["Oolong Tea / Black Oolong Tea / Green Tea / Corn Tea / Calpis / Cola / Ginger Ale / Orange Juice / Grapefruit Juice / Apple Juice","ウーロン茶／黒ウーロン茶／緑茶／コーン茶／カルピス／コーラ／ジンジャーエール／オレンジ／グレープフルーツ／りんご","each ¥550"],
+  ]},
+  {id:"red-wine", title:"Red Wine", sub:"赤ワイン", wine:true, items:[
+    ["Casillero del Diablo Reserva Privada Cabernet Sauvignon","カッシェロ・デル・ディアブロ レセルバ・プリバダ カベルネ・ソーヴィニヨン","¥6,050","Elegant blackcurrant aromas with dark-fruit notes of cherry and plum, plus complex vanilla and cedar from French oak. A full-bodied red.",
+      {o:"Chile, Maipo Valley · Full-bodied",p:"Wagyu Kalbi and Wagyu Rosu, both sauce-marinated",g:"Cabernet Sauvignon 85%, Shiraz 9%, Cabernet Franc 6%",a:"Vanilla, blackberry, oak"}],
+    ["Trivento Golden Reserve Malbec","トリヴェント ゴールデン・リザーブ マルベック","¥9,350","Powerful, fresh aromas of cherry and strawberry with well-balanced oak. A full-bodied red.",
+      {o:"Argentina, Cuyo · Full-bodied",p:"Special Salted Kalbi, Special Salted Sirloin",g:"Malbec 85%, others 15%",a:"Strawberry, blueberry, oak"}],
+    ["Robert Mondavi Private Selection Vint Central Coast Cabernet Sauvignon","ロバート・モンダヴィ プライベート・セレクション ヴィント セントラル・コースト カベルネ・ソーヴィニヨン","¥7,150","Built on dark fruit, with red-fruit nuances from the cool Pacific coastal climate. Elegant and complex.",
+      {o:"USA, California / Central Coast · Full-bodied",p:"Special Sirloin with Wasabi, sauce-marinated Wagyu Rosu",g:"Cabernet Sauvignon 86%, Malbec 11%, Petit Verdot 1%, others 2%",a:"Raspberry, toast, coffee"}],
+    ["Chateau Mercian Mariko Syrah","シャトー・メルシャン 椀子シラー","¥13,200","From the winery's own Mariko Vineyard in Ueda, Nagano — the only Japanese vineyard ranked in the World's Best Vineyards for five consecutive years through 2024. Pleasant acidity in harmony with ripe fruit.",
+      {o:"Japan, Nagano / Mariko Vineyard, Ueda · Full-bodied",p:"Special Kalbi with Wasabi, Risho's Homemade Beef Tongue Sausage",g:"Syrah 100%",a:"White pepper, cassis, bitter chocolate"}],
+    ["Chateau Mercian Hokushin Cabernet Sauvignon","シャトー・メルシャン 北信カベルネ・ソーヴィニヨン","¥19,800","Deep garnet in color, with aromas of ripe blackberry and cassis and hints of red raspberry.",
+      {o:"Japan, Nagano / Hokushin · Full-bodied",p:"Wagyu Ichibo (Rump Cap), Special Sirloin with Wasabi",g:"Cabernet Sauvignon 87%, Merlot 13%",a:"Blackberry, cassis, chocolate"}],
+    ["Kenzo Estate “rindo”","ケンゾーエステート 紫鈴リンドウ","¥27,500","Both power and finesse on the first sip, followed by refined acidity and fine, fresh tannins that coat the palate like silk, opening into gentle, generous fruit.",
+      {o:"USA, California · Full-bodied",p:"Wagyu Tenderloin Steak, Special Beef Liver",g:"Cabernet Sauvignon 62%, Merlot 22%, Petit Verdot 9%, Cabernet Franc 4%, Malbec 3%",a:"Black cherry, plum, raisin"}],
+    ["Trivento Eolo Malbec","トリヴェント エオロ マルベック","¥68,200","Trivento's flagship and one of the world's finest Malbecs. Made only from the year's best grapes, berry-sorted from a 4-hectare plot planted over 100 years ago. Concentrated yet elegant.",
+      {o:"Argentina, Mendoza / Luján de Cuyo · Full-bodied",p:"Wagyu Tenderloin Steak, Special Beef Liver",g:"Malbec 100%",a:"Raspberry, violet, blackberry"}],
+    ["Opus One","オーパスワン","¥154,000","A joint creation of Baron Philippe de Rothschild and Robert Mondavi. Beautifully balanced, silky tannins and fresh acidity give a soft, creamy texture.",
+      {o:"USA, California · Full-bodied",p:"Wagyu Tenderloin Steak, Rib Eye Steak",g:"Cabernet Sauvignon 84%, Petit Verdot 6%, Merlot 5%, Cabernet Franc 4%, Malbec 1%",a:"Cassis, violet, dark chocolate"}],
+  ]},
+  {id:"white-wine", title:"White Wine", sub:"白ワイン", wine:true, items:[
+    ["Chateau Mercian Hokushin Chardonnay","シャトー・メルシャン 北信シャルドネ","¥8,800","Gentle acidity and fruit-driven roundness give the volume and flavor typical of Chardonnay. A dry white.",
+      {o:"Japan, Nagano / Hokushin · Dry",p:"Special Sirloin with Wasabi, Seared Sushi, 2 pieces (rare lean Wagyu)",g:"Chardonnay 100%",a:"Tropical fruit, butter, nuts"}],
+    ["Kenzo Estate “asatsuyu”","ケンゾーエステート あさつゆ","¥24,200","Lively acidity and a bright, refreshing feel, with concentrated fresh fruit and a full body. A long, rich finish leaves the palate cool and clean.",
+      {o:"USA, California · Dry",p:"Special Beef Tongue (salt-seasoned), Assorted Grilled Vegetables & Mushrooms",g:"Sauvignon Blanc 90%, Sémillon 10%",a:"Citrus, lime, white peach"}],
+  ]},
+  {id:"champagne", title:"Champagne", sub:"シャンパン", wine:true, items:[
+    ["Champagne Piper-Heidsieck Brut","シャンパーニュ パイパー・エドシック ブリュット","¥13,200","The champagne presented to Queen Marie Antoinette and loved by Marilyn Monroe. Smooth, balanced and fruity — elegant and alluring.",
+      {o:"France, Champagne · Dry",p:"Whole-Slice Grilled Sirloin, Special Outside Skirt (Harami)",g:"Mainly Pinot Noir, with Meunier and Chardonnay",a:"Pear, apple, almond"}],
+    ["Champagne Charles Heidsieck Brut Réserve","シャンパーニュ シャルル・エドシック ブリュット レゼルヴ","¥18,700","Gold medal at the 1859 Bordeaux Exposition, and chosen by Eisenhower, Churchill and Dalí to entertain guests. Endless fine bubbles and remarkably complex, appetizing aromas.",
+      {o:"France, Champagne · Dry",p:"Seared Sushi, 2 pieces (rare lean Wagyu), Whole-Slice Grilled Sirloin, Special Outside Skirt (Harami)",g:"Chardonnay 40%, Pinot Noir 40%, Meunier 20%",a:"Mango, apricot, pistachio"}],
+  ]},
+  {id:"glass-wine", title:"Wine by the Glass", sub:"グラスワイン", items:[
+    ["Glass of Sparkling Wine","グラススパークリング","¥1,078"],
+    ["Glass of Red / White Wine","グラスワイン 赤／白","each ¥968"],
+  ]},
+];
+
+// Extra text for the new design, added on top of src/en-data.js (L, FOOD, DRINK).
+Object.assign(L, {
+  howtoTitle: "How to enjoy yakiniku",
+  howto: [
+    "Grill each piece yourself and eat it hot from the grill.",
+    "Japanese yakiniku is all about the flavor of the meat. Each dish is already seasoned with salt, tare sauce or miso — after grilling, add lemon sauce, tare sauce or salt & pepper to your taste.",
+    "We recommend going in this order: salt-seasoned dishes first, then tare, then miso.",
+  ],
+  legendText: "This mark shows our recommendations. · All prices include tax.",
+  feature: {shio: {
+    h: "Start with beef tongue — don't miss it.",
+    p: "Salted beef tongue is the classic of Japanese yakiniku, and the first dish most Japanese diners order. Surprisingly juicy and clean-tasting, with a light, crisp bite — that is the true appeal of tongue at a Japanese yakiniku restaurant.",
+  }},
+  notes: {
+    wasabi: "Rich, marbled Wagyu with fresh wasabi and soy sauce — two staples of Japanese food, and a uniquely Japanese way to enjoy it. Put the wasabi straight on the meat, or mix it into soy sauce to make wasabi-joyu. Its clean heat cuts through the richness, and the soy brings out the sweetness of the meat.",
+    tare: "Japanese yakiniku tare is a sweet-savory, soy-based sauce. Every restaurant has its own recipe — it is the signature of the house. Ours is made in-house: the signature flavor of Risho, loved by our guests for many years.",
+    lean: "Wagyu is famous for its marbling, but its rare lean cuts — only a small amount comes from each animal — each have a character of their own. We offer six of them. Try them side by side: each has its own flavor, marbling and texture.",
+    miso: "Nagoya is a city of miso, and horumon (offal) with miso sauce is a local classic. Our miso sauce is also made in-house — a long-loved house favorite.",
+  },
+  leads: {special: "These are Risho's signature dishes. If you can't decide, choose from here."},
+  photo: "Photo:",
+  min2: "Min. 2 slices",
+  pcs: n => n === 1 ? "1 piece" : `${n} pcs`, vary: " (varies with the cut)", thin: "Thin-sliced", thick: "Thick-cut",
+  nav: "Menu", food: "Food", drink: "Drinks",
+  // order list
+  howOrderTitle: "How to order",
+  notMobile: "This is NOT a mobile order. Adding dishes does not send your order to the kitchen.",
+  notSent: "Your order has NOT been sent yet.",
+  orderAlt: "You can also order by simply telling our staff, as usual. Using this list just makes ordering quicker and smoother.",
+  barNote: "Not sent yet — please show to staff",
+  howOrder: [
+    "Tap “+ Add” on the dishes you'd like. Your list stays at the bottom of the screen.",
+    "When you're ready, please call a staff member.",
+    "Tap “Show to staff” and show them the screen — we'll take your order from it.",
+  ],
+  add: "+ Add", plate: "1 plate", bySlice: "By the slice", sizes: {L: "Large", M: "Medium", S: "Small"},
+  inList: n => `My order · ${n} item${n === 1 ? "" : "s"}`, showStaff: "Show to staff",
+  staffTitle: "Please show this to our staff",
+  staffSub: "Our staff will enter your order from this screen.",
+  back: "Back to menu", clear: "Clear all", clearAsk: "Clear your whole order list?",
+  empty: "Your list is empty.", total: "Estimated total (tax incl.)",
+  totalNote: "For reference only. Your bill may differ.",
+});
+// Descriptions rewritten for the new design (key: Japanese name)
+const DESC = {
+  "うに赤": "Charcoal-seared lean beef prepared yukhoe-style, crowned with fresh raw sea urchin. Wrap it in nori (seaweed) to eat.",
+  "赤身ユッケ": "Lean beef seared over charcoal and prepared yukhoe-style. Wrap it in nori (seaweed) to eat.",
+  "生塩タンアゴ": "“Ago” means “jaw” in Japanese: a prized cut from under the tongue, near the jaw. Crunchy and packed with flavor — truly jaw-dropping.",
+};
+// Photo captions: the exact menu name of the dish in each photo (key: image file)
+const PHOTO = {
+  "food_aburisushi.webp": "Seared Sushi, 2 pieces (rare lean Wagyu)",
+  "food_negimori.webp": "Signature Green Onion Salad",
+  "food_shio-horumon.webp": "Signature Salted Beef Abomasum (Horumon)",
+  "food_shio-mino.webp": "Salted Beef Tripe",
+  "food_tokusen-loin-wasabiyaki.webp": "Special Sirloin with Wasabi",
+  "food_rib-steak.webp": "Rib Eye Steak",
+  "food_tokusen-harami.webp": "Special Outside Skirt (Harami)",
+  "food_tomosankaku.webp": "Wagyu Tomosankaku (Tri-Tip)",
+  "food_uniloin.webp": "Special Sirloin & Raw Sea Urchin",
+  "food_uniaka.webp": "Aka & Raw Sea Urchin",
+  "food_tokusen-liver.webp": "Special Beef Liver",
+  "food_jouhorumon.webp": "Premium Beef Large Intestine (Jo-Horumon)",
+  "food_nagaimo.webp": "Grilled Yam with Plum-Miso",
+  "food_ishiyaki-bibimba.webp": "Stone-Pot Bibimbap",
+  "food_uni-chirashi.webp": "Aka & Raw Sea Urchin Bowl",
+  "food_tailsoup-red.webp": "Beef Tail Soup – Red",
+  "food_negisoba.webp": "Risho-style Green Onion Noodles",
+};
+
+// Courses first (recommended), then the order of the current official PDF (Risho_Honkan_WebMenu_EN.pdf). With the short
+// descriptions added, its denser pages are split in two so the text stays readable on a phone.
+const CLASSIC_TITLES = {
+  en: ["Course Menu", "Chef's Recommendations", "Sashimi & Sushi", "Vegetables & Kimchi", "Salt-Seasoned", "Fresh Wasabi & Steak", "Sauce-Marinated", "Rare Lean Wagyu", "Sea Urchin, Liver & Miso", "Grilled Vegetables & Stone-Pot Rice", "Rice", "Soups & Noodles", "Desserts", "Drinks", "Drinks", "Red Wine", "Red Wine", "White Wine & Champagne"],
+  ja: ["コース", "料理長のおすすめ", "刺身・寿司", "生野菜・キムチ", "塩味の料理", "生わさび・ステーキ", "たれ味の料理", "希少な和牛の赤身", "うにく・レバー・味噌", "焼き野菜・石焼き", "ご飯もの", "スープ・麺", "デザート", "ドリンク", "ドリンク", "赤ワイン", "赤ワイン", "白ワイン・シャンパン"],
+  "zh-Hans": ["套餐", "主厨推荐", "刺身・寿司", "新鲜蔬菜・泡菜", "盐味", "鲜山葵・牛排", "酱汁腌制", "稀有赤身和牛", "海胆与牛肉・牛肝・味噌", "烤蔬菜・石锅", "米饭", "汤类・面类", "甜品", "饮品", "饮品", "红葡萄酒", "红葡萄酒", "白葡萄酒・香槟"],
+  ko: ["코스요리", "셰프 추천", "회・초밥", "생야채・김치", "소금", "생와사비・스테이크", "양념", "와규 희소 살코기", "우니쿠・간・된장", "구운 야채・돌솥", "밥", "국물요리・면요리", "디저트", "음료", "음료", "레드 와인", "레드 와인", "화이트 와인・샴페인"],
+};
+const CLASSIC = [
+  ["course"], ["special"], ["sashimi", "sushi"], ["vegetables", "pickles"], ["shio"], ["wasabi", "steak"],
+  ["tare"], ["lean"], ["uniku", "liver", "miso"], ["sausage", "grilled-veg", "ishiyaki", "unimeshi"], ["rice"],
+  ["soup", "noodles"], ["dessert"],
+  ["beer", "tea-hi", "chu-hi", "fruit", "whisky", "bottle-set"], ["makgeolli", "sake", "shochu", "soft"],
+  ["red-wine:0-4"], ["red-wine:4-8"], ["white-wine", "champagne", "glass-wine"],
+].map((secs, i) => ({title: CLASSIC_TITLES[L.lang][i], secs}));
+// this version keeps only the official descriptions: undo the lines added for the new design
+// (in English they live apart in DESC, so only the Japanese check copy needs this)
+if (L.lang === "ja") FOOD.forEach(s => s.items.forEach(it => {
+  if (typeof it[3] !== "string") return;
+  it[3] = it[3].replace("海苔で巻いてお召し上がりください。", "");
+  if (it[1] === "生塩タンアゴ") it[3] = "コリコリの食感と溢れる旨み。アゴが外れる美味しさ。";
+}));
+const CLASSIC_TEXT = {
+  en: {foot: "All prices include tax. Show the Japanese name to staff when ordering.", each: "each", min2: "Min. 2 slices"},
+  ja: {foot: "価格はすべて税込です。ご注文の際は日本語の品名をスタッフにお見せください。", each: "各", min2: "2枚からご注文いただけます"},
+  "zh-Hans": {foot: "价格均含税。点餐时请向员工出示日文菜名。", each: "每款", min2: "2片起点", cjk: "Noto Serif SC"},
+  ko: {foot: "가격은 모두 세금 포함입니다. 주문 시 일본어 메뉴명을 직원에게 보여 주세요.", each: "각", min2: "2점부터 주문 가능", cjk: "Noto Serif KR"},
+}[L.lang];
+L.classicFoot = CLASSIC_TEXT.foot;
+L.each = CLASSIC_TEXT.each;
+L.min2 = L.min2 || CLASSIC_TEXT.min2;
+if (CLASSIC_TEXT.cjk) L.cjk = CLASSIC_TEXT.cjk;
+
+// How a drink is served (fruit liqueur, shochu, whisky): shown on every menu,
+// and on the order-list version the guest picks one when adding a glass.
+const STYLED = {fruit: "std", shochu: "std", whisky: "whisky"};  // section id -> set of styles
+const STYLE_SETS = {std: ["rock", "water", "hot", "soda"], whisky: ["rock", "water", "hot", "highball"]};
+const STYLE_TEXT = {
+  en: {title: "How would you like it?", rock: "On the rocks", water: "With water", hot: "With hot water", soda: "With soda", highball: "Highball",
+       bottleHint: "For a bottle, mixers are on the", bottleSet: "Bottle Set"},
+  ja: {title: "飲み方", rock: "ロック", water: "水割り", hot: "お湯割り", soda: "ソーダ割り", highball: "ハイボール",
+       bottleHint: "ボトルの割り材は", bottleSet: "ボトルセット"},
+  "zh-Hans": {title: "饮用方式", rock: "加冰", water: "兑水", hot: "兑热水", soda: "兑苏打水", highball: "嗨棒（兑苏打水）"},
+  ko: {title: "드시는 방법", rock: "온더록", water: "물 타서", hot: "뜨거운 물 타서", soda: "소다 타서", highball: "하이볼"},
+};
+const ST = STYLE_TEXT[L.lang] || STYLE_TEXT.en;
+const STAFF_STYLE = STYLE_TEXT.ja;  // the staff screen is always in Japanese
+const stylesOf = sec => (STYLE_SETS[STYLED[sec.id]] || []);
+const styleLine = sec => stylesOf(sec).map(k => ST[k]).join(" / ");
+
+
+// courses come first on every menu
+FOOD.sort((a, b) => (b.id === "course") - (a.id === "course"));
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const SEC = Object.fromEntries([...FOOD, ...DRINK].map(s => [s.id, s]));
+const rec = `<img src="${IMG}menu-recommendation.svg" alt="${esc(L.rec)}">`;
+
+function rowHTML(it, sec){
+  let [name, jp, price, desc, flags, extra] = it;
+  if (flags && typeof flags === "object") [flags, extra] = ["", flags];
+  const f = typeof flags === "string" ? flags : "";
+  // the short description from the official Japanese menu (translated); courses list their dishes,
+  // wines show origin + description. Texts added for the new design (DESC in en-v2.js) are not used here.
+  const x = sec.course && Array.isArray(extra) ? extra.join(", ")
+          : sec.wine && extra ? [extra.o, desc].filter(Boolean).join(" — ")
+          : desc || "";
+  // "1 slice ¥968<br>¥4,048": the whole plate large, the per-slice price small with "min. 2"
+  const parts = price.split("<br>");
+  const p = parts.length === 2 && /^¥[\d,]+$/.test(parts[1])
+    ? `${parts[1]}<small>${parts[0]}${/slice|一切れ|片|점/.test(parts[0]) && L.min2 ? ` · ${L.min2}` : ""}</small>` : parts.join("<br>");
+  return `<div class="row"><div><div class="n">${f.includes("r") ? rec : ""}${esc(name)}${f.includes("l") ? `<span class="lim">${esc(L.lim)}</span>` : ""}</div>
+    <div class="j" lang="ja">${esc(jp)}</div>${x ? `<div class="x">${esc(x)}</div>` : ""}</div>
+    <div class="p">${p}${sec.wine ? `<small>${esc(L.bottle)}</small>` : ""}</div></div>`;
+}
+
+// drinks: neighbouring items with the same price and no description share one row
+// ("Fresh Lemon Sour / Fresh Orange Sour … each ¥858"), as on the current PDF
+function compact(sec){
+  if (sec.wine || !DRINK.some(d => d.id === sec.id)) return sec.items;
+  const out = [];
+  for (const it of sec.items) {
+    const last = out[out.length - 1];
+    if (last && !it[3] && !last[3] && last[2].replace(/^\S+ (?=¥)/, "") === it[2] && !/<br>/.test(it[2]))
+      out[out.length - 1] = [`${last[0]} / ${it[0]}`, `${last[1]}／${it[1]}`, `${L.each} ${it[2]}`];
+    else out.push(it);
+  }
+  return out;
+}
+
+const total = CLASSIC.length;
+document.getElementById("pages").innerHTML = CLASSIC.map((pg, i) => `<section class="page">
+  <div class="top"><img src="${IMG}trademark-restaurant-risho-honkan.svg" alt="李昇 本館"><div class="store">${esc(L.h1)}<br>Menu</div></div>
+  <h1>${esc(pg.title)}</h1>
+  <div class="body">${pg.secs.map(ref => {
+    // "red-wine:0-4" = items 0..3 of a section that is split over two pages
+    const [id, range] = ref.split(":"), whole = SEC[id];
+    const [a, z] = range ? range.split("-").map(Number) : [0, whole.items.length];
+    const s = {...whole, items: whole.items.slice(a, z)};
+    const head = pg.secs.length > 1 ? `<h2>${esc(s.title)}<span lang="ja">${esc(s.sub.split(" · ")[0])}</span></h2>` : "";
+    const st = stylesOf(s).length ? `<div class="styles">${esc(ST.title)}：${esc(styleLine(s))}</div>` : "";
+    return head + st + compact(s).map(it => rowHTML(it, s)).join("");
+  }).join("")}</div>
+  <div class="foot"><span>${rec} ${esc(L.rec)} · ${esc(L.classicFoot)}</span><span>${i + 1} / ${total}</span></div>
+</section>`).join("");
+
+document.documentElement.lang = L.lang;
+if (L.cjk) document.documentElement.style.setProperty("--cjk", `"${L.cjk}"`);
+document.title = L.title;
+// shrink a page's text until its list fits the page
+function fit(){
+  document.querySelectorAll(".page").forEach(pg => {
+    let k = 1;
+    pg.style.setProperty("--k", k);
+    const body = pg.querySelector(".body");
+    while (body.scrollHeight > body.clientHeight + 1 && k > 0.7) {
+      k = Math.round((k - 0.02) * 100) / 100;
+      pg.style.setProperty("--k", k);
+    }
+  });
+}
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(fit);
+</script>
+</body>
+</html>
