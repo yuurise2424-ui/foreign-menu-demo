@@ -147,6 +147,19 @@ body.has-order .float{bottom:76px}
 .staff .btns .in2{max-width:560px;margin:0 auto;display:flex;gap:10px;padding:8px 16px}
 .staff .btns button{flex:1;font:600 14px "Source Serif 4",serif;padding:9px;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
 .staff .btns .clear{flex:none;color:var(--red);border-color:var(--red)}
+.staff .btns .done{flex:1.4;background:var(--ink);color:var(--paper);line-height:1.2;font-family:"Shippori Mincho",serif}
+.staff .btns .done small{display:block;font:400 10px "Source Serif 4",serif;color:#e9c9c5}
+.staff .btns button[hidden]{display:none}
+.staff .donenote{margin-top:12px;padding:8px 10px;border:1px dashed var(--sub);font-size:13px;line-height:1.5}
+.staff .donenote[hidden]{display:none}
+#ordered h3{font:700 16px "Source Serif 4","Shippori Mincho",serif;margin:24px 0 2px;padding-bottom:3px;border-bottom:1px solid var(--ink)}
+#ordered .round{font-size:12px;color:var(--sub);margin:10px 0 0}
+#ordered .srow .sj,#ordered .srow .q{color:var(--sub)}
+#ordered .linkbtn{background:none;border:0;padding:0;margin-top:8px;color:var(--red);text-decoration:underline;font:inherit;font-size:12px;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:84px;z-index:40;display:flex;gap:14px;align-items:center;width:max-content;max-width:calc(100% - 32px);background:var(--ink);color:var(--paper);padding:10px 14px;font-size:14px;line-height:1.4;
+  opacity:0;visibility:hidden;transform:translate(-50%,16px);transition:opacity .25s,transform .25s,visibility 0s .25s}
+.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0);transition:opacity .25s,transform .25s}
+.toast button{flex:none;background:none;border:0;color:#e9c9c5;text-decoration:underline;font:inherit;cursor:pointer}
 
 /* ---- motion: short and quiet; switched off for people who ask their phone for less motion ---- */
 :root{--ease:cubic-bezier(.2,.7,.2,1)}
@@ -212,7 +225,10 @@ body.has-order .float{bottom:76px}
   <h2 id="staff-title"></h2><p class="notmo" id="staff-notmo"></p><p class="sub" id="staff-sub"></p>
   <div id="staff-list"></div>
   <p class="total" id="staff-total"></p>
-</div><div class="btns"><div class="in2"><button id="staff-back"></button><button class="clear" id="staff-clear"></button></div></div></div>
+  <p class="donenote" id="staff-donenote"></p>
+  <div id="ordered"></div>
+</div><div class="btns"><div class="in2"><button id="staff-back"></button><button class="done" id="staff-done"></button><button class="clear" id="staff-clear"></button></div></div></div>
+<div class="toast" id="toast" role="status"><span></span><button></button></div>
 
 <script>
 const IMG = "https://www.shoya.com/.assets/";
@@ -469,6 +485,7 @@ Object.assign(L, {
     "Tap “+ Add” on the dishes you'd like. Your list stays at the bottom of the screen.",
     "When you're ready, please call a staff member.",
     "Tap “Show to staff” and show them the screen — we'll take your order from it.",
+    "Once your order is taken, our staff will tap “注文済みにする” (Order taken) on your screen. Your list then moves to “Already ordered”, so you can start a new list for more dishes.",
   ],
   add: "+ Add", plate: "1 plate", bySlice: "By the slice", sizes: {L: "Large", M: "Medium", S: "Small"},
   inList: n => `My order · ${n} item${n === 1 ? "" : "s"}`, showStaff: "Show to staff",
@@ -477,6 +494,13 @@ Object.assign(L, {
   back: "Back to menu", clear: "Clear all", clearAsk: "Clear your whole order list?",
   empty: "Your list is empty.", total: "Estimated total (tax incl.)",
   totalNote: "For reference only. Your bill may differ.",
+  done: "注文済みにする", doneSub: "For staff · Order taken",
+  doneNote: "After taking the order, our staff will tap “注文済みにする” below. スタッフの方へ：ご注文を入力したら、下の「注文済みにする」を押してください。",
+  doneToast: "Moved to “Already ordered”.", undo: "Undo",
+  orderedTitle: "Already ordered", round: n => `Order ${n}`,
+  orderedTotal: "Ordered so far (tax incl.)",
+  barOrdered: n => `Already ordered · ${n} item${n === 1 ? "" : "s"}`, viewOrdered: "View",
+  clearOrdered: "Clear the ordered list", clearOrderedAsk: "Clear the list of dishes you have already ordered?",
 });
 // Descriptions rewritten for the new design (key: Japanese name)
 const DESC = {
@@ -727,6 +751,37 @@ const save = () => { try { localStorage.setItem("risho-order", JSON.stringify(ca
 const lines = () => Object.keys(cart).filter(k => REG[k] && cart[k] > 0).sort((a, b) => REG[a].n - REG[b].n);
 const qtyText = (k, q) => REG[k].unit === "guests" ? `× ${q}名` : REG[k].unit === "slices" ? `× ${q}枚` : `× ${q}`;
 
+// Already ordered: when staff tap "注文済みにする", the list moves here, so the next order starts
+// from an empty list but the guest can still see what they have ordered. Forgotten after 6 hours.
+let ordered = [];
+try { ordered = JSON.parse(localStorage.getItem("risho-ordered") || "[]"); } catch (_) {}
+if (!Array.isArray(ordered) || (ordered.length && Date.now() - ordered[ordered.length - 1].t > 6 * 3600e3)) ordered = [];
+const saveOrdered = () => { try { localStorage.setItem("risho-ordered", JSON.stringify(ordered)); } catch (_) {} };
+const hhmm = t => { const d = new Date(t); return `${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`; };
+function drawOrdered(){
+  const rounds = ordered.map(r => ({t: r.t, items: r.items,
+    keys: Object.keys(r.items || {}).filter(k => REG[k] && r.items[k] > 0).sort((a, b) => REG[a].n - REG[b].n)})).filter(r => r.keys.length);
+  const el = document.getElementById("ordered");
+  if (!rounds.length) { el.innerHTML = ""; return 0; }
+  const sum = rounds.reduce((t, r) => t + r.keys.reduce((u, k) => u + REG[k].yen * r.items[k], 0), 0);
+  el.innerHTML = `<h3>${esc(L.orderedTitle)}</h3>` + rounds.map((r, i) => `<p class="round">${esc(L.round(i + 1))} · ${hhmm(r.t)}</p>` +
+      r.keys.map(k => `<div class="srow"><div class="sj">${esc(REG[k].staff)}</div><div class="q">${qtyText(k, r.items[k])}</div>
+        <div class="se"><span>${esc(REG[k].name)}</span></div></div>`).join("")).join("") +
+    `<p class="total">${esc(L.orderedTotal)} ¥${sum.toLocaleString()}<small>${esc(L.totalNote)}</small></p>` +
+    `<button class="linkbtn" id="ordered-clear">${esc(L.clearOrdered)}</button>`;
+  return rounds.reduce((t, r) => t + r.keys.length, 0);
+}
+let toastTimer;
+function toast(msg, onUndo){
+  const t = document.getElementById("toast");
+  t.querySelector("span").textContent = msg;
+  t.querySelector("button").textContent = L.undo;
+  t.querySelector("button").onclick = () => { clearTimeout(toastTimer); t.classList.remove("show"); onUndo(); };
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 6000);
+}
+
 let shown = {};  // counts drawn last time
 function refresh(){
   const ls = lines();
@@ -748,13 +803,18 @@ function refresh(){
   });
   const countChanged = lines().length !== Object.keys(shown).filter(k => shown[k] > 0).length;
   shown = {...cart};
-  document.getElementById("orderbar").classList.toggle("show", ls.length > 0);
-  document.body.classList.toggle("has-order", ls.length > 0);
+  const nOrdered = drawOrdered();
+  const any = ls.length > 0 || nOrdered > 0;
+  document.getElementById("orderbar").classList.toggle("show", any);
+  document.body.classList.toggle("has-order", any);
   const obc = document.getElementById("ob-count");
-  obc.textContent = L.inList(ls.length);
+  obc.textContent = ls.length ? L.inList(ls.length) : L.barOrdered(nOrdered);
+  document.getElementById("ob-note").textContent = ls.length ? L.barNote : "";
+  document.getElementById("ob-show").textContent = ls.length ? L.showStaff : L.viewOrdered;
   if (countChanged) { obc.classList.remove("bump"); void obc.offsetWidth; obc.classList.add("bump"); }
   const total = ls.reduce((t, k) => t + REG[k].yen * cart[k], 0);
   document.getElementById("staff-total").innerHTML = ls.length ? `${esc(L.total)} ¥${total.toLocaleString()}<small>${esc(L.totalNote)}</small>` : "";
+  ["staff-done", "staff-clear", "staff-donenote", "staff-notmo"].forEach(id => document.getElementById(id).hidden = !ls.length);
   save();
 }
 
@@ -780,6 +840,19 @@ document.getElementById("staff-clear").addEventListener("click", () => {
   if (!confirm(L.clearAsk)) return;
   cart = {}; refresh(); staff.classList.remove("open");
 });
+// staff tap this after entering the order: the list moves to "Already ordered" (with undo)
+document.getElementById("staff-done").addEventListener("click", () => {
+  if (!lines().length) return;
+  const round = {t: Date.now(), items: {...cart}}, before = cart;
+  ordered.push(round); saveOrdered();
+  cart = {}; refresh();
+  staff.scrollTop = 0;
+  toast(L.doneToast, () => { ordered = ordered.filter(r => r !== round); saveOrdered(); cart = before; refresh(); });
+});
+document.getElementById("ordered").addEventListener("click", e => {
+  if (!e.target.closest("#ordered-clear") || !confirm(L.clearOrderedAsk)) return;
+  ordered = []; saveOrdered(); refresh();
+});
 
 document.documentElement.lang = L.lang;
 document.title = L.title;
@@ -803,8 +876,10 @@ document.getElementById("staff-title").textContent = L.staffTitle;
 document.getElementById("staff-sub").textContent = L.staffSub;
 document.getElementById("staff-back").textContent = L.back;
 document.getElementById("staff-clear").textContent = L.clear;
+document.getElementById("staff-done").innerHTML = `${esc(L.done)}<small>${esc(L.doneSub)}</small>`;
+document.getElementById("staff-donenote").textContent = L.doneNote;
 if (ORDERING) refresh();
-else document.querySelectorAll(".howorder,#orderbar,#staff").forEach(el => el.remove());
+else document.querySelectorAll(".howorder,#orderbar,#staff,#toast").forEach(el => el.remove());
 
 // category nav: JS scrolling (hash jumps don't work in every viewer), highlight the section on screen
 const short = t => t.replace(/ \(.*\)/, "").replace(/（.*）/, "");

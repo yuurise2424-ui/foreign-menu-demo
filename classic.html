@@ -297,6 +297,7 @@ Object.assign(L, {
     "Tap “+ Add” on the dishes you'd like. Your list stays at the bottom of the screen.",
     "When you're ready, please call a staff member.",
     "Tap “Show to staff” and show them the screen — we'll take your order from it.",
+    "Once your order is taken, our staff will tap “注文済みにする” (Order taken) on your screen. Your list then moves to “Already ordered”, so you can start a new list for more dishes.",
   ],
   add: "+ Add", plate: "1 plate", bySlice: "By the slice", sizes: {L: "Large", M: "Medium", S: "Small"},
   inList: n => `My order · ${n} item${n === 1 ? "" : "s"}`, showStaff: "Show to staff",
@@ -305,6 +306,13 @@ Object.assign(L, {
   back: "Back to menu", clear: "Clear all", clearAsk: "Clear your whole order list?",
   empty: "Your list is empty.", total: "Estimated total (tax incl.)",
   totalNote: "For reference only. Your bill may differ.",
+  done: "注文済みにする", doneSub: "For staff · Order taken",
+  doneNote: "After taking the order, our staff will tap “注文済みにする” below. スタッフの方へ：ご注文を入力したら、下の「注文済みにする」を押してください。",
+  doneToast: "Moved to “Already ordered”.", undo: "Undo",
+  orderedTitle: "Already ordered", round: n => `Order ${n}`,
+  orderedTotal: "Ordered so far (tax incl.)",
+  barOrdered: n => `Already ordered · ${n} item${n === 1 ? "" : "s"}`, viewOrdered: "View",
+  clearOrdered: "Clear the ordered list", clearOrderedAsk: "Clear the list of dishes you have already ordered?",
 });
 // Descriptions rewritten for the new design (key: Japanese name)
 const DESC = {
