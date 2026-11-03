@@ -21,6 +21,9 @@ header{padding:40px 24px 26px;text-align:center}
 header .logo{height:96px;width:auto;margin:0 auto;filter:brightness(0)}
 header h1{font:600 calc(14px*var(--fs)) "Source Serif 4",serif;letter-spacing:.32em;text-transform:uppercase;margin-top:16px;color:var(--sub)}
 header .line{width:40px;height:1px;background:var(--red);margin:16px auto 0}
+.easy{max-width:512px;margin:0 auto 22px;padding:12px 16px;border:1px solid var(--red);text-align:center;font-size:calc(14px*var(--fs))}
+.easy b{display:block;color:var(--red);font-size:calc(16px*var(--fs));margin-bottom:2px}
+@media (max-width:560px){.easy{margin:0 24px 22px}}
 
 /* category nav */
 .catnav{position:sticky;top:0;z-index:5;background:var(--paper);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
@@ -204,6 +207,7 @@ body.has-order .float{bottom:76px}
   <h1></h1>
   <div class="line"></div>
 </header>
+<p class="easy" id="easy"><b id="easy-h"></b><span id="easy-p"></span></p>
 <nav class="catnav"><div class="groups"><button data-g="food" id="g-food"></button><button data-g="drink" id="g-drink"></button></div><ul id="catnav"></ul></nav>
 <main>
   <div id="page-food">
@@ -476,6 +480,8 @@ Object.assign(L, {
   pcs: n => n === 1 ? "1 piece" : `${n} pcs`, vary: " (varies with the cut)", thin: "Thin-sliced", thick: "Thick-cut",
   nav: "Menu", food: "Food", drink: "Drinks",
   // order list
+  easyTitle: "Easy ordering — no Japanese needed",
+  easyText: "At the restaurant, just scan the QR code on your table, add the dishes you'd like, and show the list to our staff.",
   howOrderTitle: "How to order",
   notMobile: "This is NOT a mobile order. Adding dishes does not send your order to the kitchen.",
   notSent: "Your order has NOT been sent yet.",
@@ -865,6 +871,8 @@ document.getElementById("drink-title").textContent = L.drink;
 document.getElementById("footer").textContent = L.footer;
 render(FOOD, document.getElementById("food"));
 render(DRINK, document.getElementById("drink"));
+document.getElementById("easy-h").textContent = L.easyTitle;
+document.getElementById("easy-p").textContent = L.easyText;
 document.getElementById("howorder-title").textContent = L.howOrderTitle;
 document.getElementById("howorder").innerHTML = L.howOrder.map(t => `<li>${esc(t)}</li>`).join("");
 document.getElementById("notmo").textContent = L.notMobile;
@@ -879,7 +887,7 @@ document.getElementById("staff-clear").textContent = L.clear;
 document.getElementById("staff-done").innerHTML = `${esc(L.done)}<small>${esc(L.doneSub)}</small>`;
 document.getElementById("staff-donenote").textContent = L.doneNote;
 if (ORDERING) refresh();
-else document.querySelectorAll(".howorder,#orderbar,#staff,#toast").forEach(el => el.remove());
+else document.querySelectorAll("#easy,.howorder,#orderbar,#staff,#toast").forEach(el => el.remove());
 
 // category nav: JS scrolling (hash jumps don't work in every viewer), highlight the section on screen
 const short = t => t.replace(/ \(.*\)/, "").replace(/（.*）/, "");
