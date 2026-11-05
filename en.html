@@ -23,6 +23,11 @@ header h1{font:600 calc(14px*var(--fs)) "Source Serif 4",serif;letter-spacing:.3
 header .line{width:40px;height:1px;background:var(--red);margin:16px auto 0}
 .easy{max-width:512px;margin:0 auto 22px;padding:12px 16px;border:1px solid var(--red);text-align:center;font-size:calc(14px*var(--fs))}
 .easy b{display:block;color:var(--red);font-size:calc(16px*var(--fs));margin-bottom:2px}
+.faq{max-width:512px;width:calc(100% - 48px);margin:-10px auto 22px;border:1px solid var(--ink);font-size:calc(14px*var(--fs))}
+.faq summary{padding:11px 16px;font-weight:600;font-size:calc(15px*var(--fs));cursor:pointer}
+.faq dl{padding:0 16px 14px}
+.faq dt{margin-top:12px;padding-top:12px;border-top:1px solid var(--rule);font-weight:600}
+.faq dd{margin:4px 0 0;color:var(--sub)}
 @media (max-width:560px){.easy{margin:0 24px 22px}}
 
 /* category nav */
@@ -208,6 +213,7 @@ body.has-order .float{bottom:76px}
   <div class="line"></div>
 </header>
 <p class="easy" id="easy"><b id="easy-h"></b><span id="easy-p"></span></p>
+<details class="faq" id="faq"><summary id="faq-title"></summary><dl id="faq-list"></dl></details>
 <nav class="catnav"><div class="groups"><button data-g="food" id="g-food"></button><button data-g="drink" id="g-drink"></button></div><ul id="catnav"></ul></nav>
 <main>
   <div id="page-food">
@@ -477,6 +483,15 @@ Object.assign(L, {
   leads: {special: "These are Risho's signature dishes. If you can't decide, choose from here."},
   photo: "Photo:",
   min2: "Min. 2 slices",
+  gramNote: "For 2 servings or more, the number of slices may be smaller because we portion by weight.",
+  faqTitle: "Allergies, religion and dietary needs",
+  faq: [
+    ["I have a food allergy", "Allergens are not listed for every dish. Please tell our staff before ordering. We use a shared kitchen, so we cannot completely avoid allergens. Our Cold Noodles contain no buckwheat flour, but they are made in a factory that also makes soba. Our Green Onion Noodles are ramen-style noodles made with wheat."],
+    ["I don't eat beef", "The only non-beef meat dish is our Pure-breed Nagoya Cochin Chicken with Salt. Our sausage, Beef Tail Soup, Green Onion Noodles and Cold Noodles also contain beef. Bibimbap can be made without minced meat. Please tell our staff before ordering."],
+    ["I don't eat pork / Halal", "Our Homemade Beef Tongue Sausage contains pork. No other dishes contain pork. We are not halal certified."],
+    ["I avoid alcohol", "Sauces and seasonings may contain alcohol, such as sake or mirin. Please ask our staff before ordering."],
+    ["Do you serve raw dishes?", "Some dishes, such as sashimi, are raw or nearly raw. Please grill meat thoroughly before eating."],
+  ],
   pcs: n => n === 1 ? "1 piece" : `${n} pcs`, vary: " (varies with the cut)", thin: "Thin-sliced", thick: "Thick-cut",
   nav: "Menu", food: "Food", drink: "Drinks",
   // order list
@@ -648,7 +663,7 @@ function itemHTML(it, sec){
       <div class="price">${priceHTML(price)}${sec.wine ? `<small>${esc(L.bottle)}</small>` : ""}</div></div>
     <div class="jp" lang="ja">${esc(jp)}</div>
     ${sec.wine && extra && extra.o ? `<div class="origin">${esc(extra.o)}</div>` : ""}
-    ${desc ? `<p>${esc(desc)}</p>` : ""}${more}${grillHTML(jp)}${orderHTML(it, sec)}</div>`;
+    ${desc ? `<p>${esc(desc)}</p>` : ""}${more}${grillHTML(jp)}${jp.includes("特選") && jp !== "特選レバー" ? `<div class="grill">${esc(L.gramNote)}</div>` : ""}${orderHTML(it, sec)}</div>`;
 }
 
 const capOf = ([file, cap]) => (typeof PHOTO !== "undefined" && PHOTO[file]) || cap;
@@ -869,6 +884,10 @@ document.getElementById("legend").innerHTML = `${recIcon()}<span>${esc(L.legendT
 document.getElementById("food-title").textContent = L.food;
 document.getElementById("drink-title").textContent = L.drink;
 document.getElementById("footer").textContent = L.footer;
+if (L.faq) {
+  document.getElementById("faq-title").textContent = L.faqTitle;
+  document.getElementById("faq-list").innerHTML = L.faq.map(([q, a]) => `<dt>${esc(q)}</dt><dd>${esc(a)}</dd>`).join("");
+} else document.getElementById("faq").remove();
 render(FOOD, document.getElementById("food"));
 render(DRINK, document.getElementById("drink"));
 document.getElementById("easy-h").textContent = L.easyTitle;
