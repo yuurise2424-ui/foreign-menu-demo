@@ -484,14 +484,6 @@ Object.assign(L, {
   photo: "Photo:",
   min2: "Min. 2 slices",
   gramNote: "For 2 servings or more, the number of slices may be smaller because we portion by weight.",
-  faqTitle: "Allergies, religion and dietary needs",
-  faq: [
-    ["I have a food allergy", "Allergens are not listed for every dish. Please tell our staff before ordering. We use a shared kitchen, so we cannot completely avoid allergens. Our Cold Noodles contain no buckwheat flour, but they are made in a factory that also makes soba. Our Green Onion Noodles are ramen-style noodles made with wheat."],
-    ["I don't eat beef", "The only non-beef meat dish is our Pure-breed Nagoya Cochin Chicken with Salt. Our sausage, Beef Tail Soup, Green Onion Noodles and Cold Noodles also contain beef. Bibimbap can be made without minced meat. Please tell our staff before ordering."],
-    ["I don't eat pork / Halal", "Our Homemade Beef Tongue Sausage contains pork. No other dishes contain pork. We are not halal certified."],
-    ["I avoid alcohol", "Sauces and seasonings may contain alcohol, such as sake or mirin. Please ask our staff before ordering."],
-    ["Do you serve raw dishes?", "Some dishes, such as sashimi, are raw or nearly raw. Please grill meat thoroughly before eating."],
-  ],
   pcs: n => n === 1 ? "1 piece" : `${n} pcs`, vary: " (varies with the cut)", thin: "Thin-sliced", thick: "Thick-cut",
   nav: "Menu", food: "Food", drink: "Drinks",
   // order list
@@ -622,6 +614,157 @@ const NOTES = {
   "焼き野菜ときのこの盛り合わせ": {pcs:false, cut:"", en:"Vegetables cook faster than meat — grill until tender.", ja:"野菜は肉より早く焼けます。柔らかくなったら食べごろです。"},
 };
 
+// English text of the Japanese master (ja-master.js). Read by reflect-v2.js. Only en.html and en-menu-only.html use it.
+// The official Japanese name has a space here; en-data.js has none and also feeds the classic pages
+DRINK.flatMap(sec => sec.items).find(it => it[1] === "ケンゾーエステート あさつゆ")[1] = "ケンゾー エステート あさつゆ";
+const FATTY = "Rich in fat, so grill it well and let the fat drip off for the best flavor.", HARAMI = "Best when grilled well.";
+const WASABI = "Once grilled, put fresh wasabi on the meat, dip it lightly in soy sauce and enjoy.";
+const LEAN = "Sear both sides briefly, just until light grill marks appear in dots.";
+const CRISP = "until crisp outside. Cooking it all the way through makes it tough.";
+const M = {
+  text: {
+    howto: [
+      "Grill each piece yourself and eat it hot from the grill.",
+      "Japanese yakiniku is all about the flavor of the meat. Each dish is already seasoned with salt, tare sauce or miso. After grilling, dip it in tare sauce, lemon sauce or salt & pepper to your taste.",
+      "Enjoy the meat in this order: salt-seasoned first, then tare, then miso.",
+    ],
+    countNote: "Slice counts are a guide. We portion by weight, so the weight stays the same but the number of slices may vary.",
+    leads: {special: "Our recommended dishes — enjoy the taste of Risho. These are Risho's signature dishes; if you can't decide, choose from here."},
+    notes: {
+      wasabi: "Rich, marbled Wagyu with fresh wasabi and soy sauce — two staples of Japanese food, and a uniquely Japanese way to enjoy it. Once the meat is grilled, put the wasabi on it and dip it lightly in soy sauce. Wasabi is there for its aroma: mixed into soy sauce, you only taste the soy, so please keep them separate. Its fresh aroma lightens the richness, and the soy brings out the sweetness of the meat.",
+      tare: "Japanese yakiniku tare is a sweet-savory, soy-based sauce. Every restaurant has its own recipe — it is the signature of the house. Ours is made in-house: the signature flavor of Risho, loved by our guests for many years. We coat the meat with tare just before serving.",
+      lean: "We offer six rare lean cuts. Each has its own flavor, marbling and texture, so please try them side by side. Marbling generally increases as you go down the menu, though it varies with the meat, so this is only a rough guide.",
+    },
+  },
+  sec: {
+    tare: {title: "Tare Sauce"},
+    unimeshi: {title: "Sea Urchin & Beef Rice"},
+    miso: {title: "Miso"},
+    liver: {caution: "Liver must always be grilled before eating."},
+    course: {addon: "All-you-can-drink (90 minutes): add to any course for +¥2,750. Everyone at the table must order it. Not every drink on this menu is included — we will bring you a separate all-you-can-drink menu."},
+  },
+  names: {
+    "純系名古屋コーチン塩焼き": "Purebred Nagoya Cochin Chicken with Salt",
+    "赤身ユッケ": "Aka Lean Beef Yukhoe",
+    "うに赤": "Aka Lean Beef & Raw Sea Urchin",
+    "うにちらし": "Aka Lean Beef & Raw Sea Urchin Bowl",
+    "ミノ刺し": "Raw Mino (Beef Tripe)",
+    "センマイ刺し": "Raw Senmai (Beef Omasum)",
+    "名物塩ホルモン": "Signature Salted Horumon (Beef Abomasum)",
+    "生塩タンアゴ": "Fresh Salted Tan-Ago (Tongue Underside)",
+    "塩ミノ": "Salted Mino (Beef Tripe)",
+    "特選塩ハラミ": "Special Salted Harami (Outside Skirt)",
+    "特選ハラミのわさび焼き": "Special Harami (Outside Skirt) with Wasabi",
+    "特選ハラミ": "Special Harami (Outside Skirt)",
+    "ギアラ": "Giara (Beef Abomasum)",
+    "上ミノ": "Jo-Mino (Premium Beef Tripe)",
+    "上ホルモン": "Jo-Horumon (Premium Beef Large Intestine)",
+    "上ホルモン脂付き": "Jo-Horumon with Fat (Premium Beef Small Intestine)",
+    "あらごし梅酒": "Aragoshi Umeshu (Plum Wine)",
+    "あらごし柚子": "Aragoshi Yuzu Liqueur",
+  },
+  wine: {
+    "カッシェロ・デル・ディアブロ レセルバ・プリバダ カベルネ・ソーヴィニヨン": "Wagyu Kalbi and Wagyu Rosu (Lean Cut) with tare sauce",
+    "ロバート・モンダヴィ プライベート・セレクション ヴィント セントラル・コースト カベルネ・ソーヴィニヨン": "Special Sirloin with Wasabi, Wagyu Rosu (Lean Cut) with tare sauce",
+    "シャンパーニュ パイパー・エドシック ブリュット": "Special Harami (Outside Skirt)",
+    "シャンパーニュ シャルル・エドシック ブリュット レゼルヴ": "Seared Sushi, 2 pieces (rare lean Wagyu), Special Harami (Outside Skirt)",
+  },
+  contents: {
+    "Salted beef tongue with green onion": "Fresh salted beef tongue with green onion",
+    "Pure-breed Nagoya Cochin chicken": "Purebred Nagoya Cochin chicken with salt",
+    "Sea urchin & sirloin": "Special sirloin & raw sea urchin",
+    "Beef tripe sashimi": "Raw Mino (beef tripe)",
+    "Lean beef yukhoe": "Aka lean beef yukhoe",
+    "Signature green-onion salad": "Signature green onion salad",
+    "Shoya smooth pudding": "Shoya's smooth pudding",
+  },
+  photo: {
+    "food_uniaka.webp": "Aka Lean Beef & Raw Sea Urchin",
+    "food_uni-chirashi.webp": "Aka Lean Beef & Raw Sea Urchin Bowl",
+    "food_shio-horumon.webp": "Signature Salted Horumon (Beef Abomasum)",
+    "food_shio-mino.webp": "Salted Mino (Beef Tripe)",
+    "food_tokusen-harami.webp": "Special Harami (Outside Skirt)",
+    "food_jouhorumon.webp": "Jo-Horumon (Premium Beef Large Intestine)",
+  },
+  desc: {
+    "和牛トモサンカク": "A rare cut with the best fat balance of any round cut.",
+    "李昇流“ネギそば”": "A double soup of oxtail broth and bonito broth, topped with a mound of finely shredded white green onion. Deep and rich.",
+    "長芋の梅味噌焼 韓国海苔添え": "Wrap the charcoal-grilled Chinese yam in Korean seaweed with our homemade plum miso, then enjoy.",
+    "玉タン刺し": "Rare Japanese beef tongue, mixed with egg yolk and served with our special soy sauce.",
+    "うに赤": "Our Aka Lean Beef Yukhoe topped with fresh raw sea urchin. The beef is seared over charcoal. Wrap it in nori (seaweed) to eat.",
+    "トロ赤": "The same lean beef as our Aka Lean Beef Yukhoe, seasoned with a Japanese-style sauce. Wrap it in shiso leaf and daikon radish to eat.",
+    "うにちらし": "Aka lean beef and raw sea urchin on rice, eaten in big mouthfuls. Pure bliss in a bowl.",
+    "炙り寿司 2貫盛り（希少赤身使用）": "Served on rice seasoned especially for lean beef. Add plenty of freshly grated real wasabi and enjoy with young green onion. Sear the meat yourself before eating. Our head chef picks the meat from our rare lean cuts based on its condition that day.",
+    "サンチュ": "A yakiniku classic. Wrap your grilled meat in it and dip it in our homemade sangchu miso.",
+    "李昇サラダ 白": "Shredded daikon radish topped with grated yam (tororo), dressing and bonito flakes. Mix well before eating.",
+    "ネギ生塩タン": "We check the quality of the meat and cut each slice carefully.",
+    "特選塩ハラミ": "A rare cut from the beef diaphragm. Its juices spread through your mouth.",
+    "和牛カルビ": "Melts in your mouth. Contains vitamin B.",
+    "うにロース": "Quickly sear the special sirloin, wrap it with raw sea urchin, toasted nori and a shiso leaf, then dip it in soy sauce.",
+    "ご飯": "Exceptionally tasty rice from selected farms.",
+    "石焼きガーリックライス": "Garlic rice packed with Wagyu beef. Add dashi soy sauce to your taste.",
+    "焼き野菜ときのこの盛り合わせ": "A well-balanced mix of vegetables and mushrooms. Dip in grated daikon ponzu to your taste.",
+    "お持ち帰り昇家プリン": "The pudding featured on Japanese TV souvenir shows. Available for takeaway and shipping within Japan — just ask our staff.",
+  },
+  beer: [
+    ["Bottled Beer (Asahi Super Dry)", "瓶ビール（アサヒスーパードライ）"],
+    ["Bottled Beer (Suntory The Premium Malt's)", "瓶ビール（サントリープレミアムモルツ）"],
+    ["Bottled Beer (Sapporo Akaboshi)", "瓶ビール（サッポロ赤星）"],
+    ["Bottled Beer (Kirin Lager)", "瓶ビール（キリンラガー）"],
+  ],
+  leanTip: LEAN,
+  grill: {
+    "特選塩カルビ": {tip: FATTY}, "特選塩ロース": {tip: FATTY}, "特選カルビ": {tip: FATTY}, "特選ロース": {tip: FATTY},
+    "特選塩ハラミ": {tip: HARAMI}, "特選ハラミ": {tip: HARAMI},
+    "特選タン": {tip: "Grill " + CRISP},
+    "純系名古屋コーチン塩焼き": {tip: "Must be cooked through — grill until no red remains inside."},
+    "特選カルビのわさび焼き": {tip: FATTY + " " + WASABI},
+    "特選ハラミのわさび焼き": {tip: HARAMI + " " + WASABI},
+    "特選ロースのわさび焼き": {cut: "thin", tip: "Don't overcook: " + LEAN.toLowerCase() + " " + WASABI},
+    "塩タンステーキ": {tip: "Grill it whole " + CRISP + " Once grilled, cut it on the cutting board we provide."},
+    "リブ芯ステーキ": {tip: "Grill it whole, then cut it on the cutting board we provide."},
+    "長芋の梅味噌焼 韓国海苔添え": {pcs: null, tip: "6 pcs"},
+    "李昇自家製牛タンソーセージ（4本）": null,
+    "焼き野菜ときのこの盛り合わせ": null,
+  },
+};
+
+// Puts the Japanese master (ja-master.js) into a language: M comes from en-master.js, zh-master.js, ko-master.js
+// or the back-translations. The classic pages keep the official translation, so nothing here reaches them.
+{
+  const all = [...FOOD, ...DRINK], sec = id => all.find(s => s.id === id);
+  Object.entries(M.sec || {}).forEach(([id, text]) => Object.assign(sec(id), text));
+  // Bottled beer: one row per brand, so the guest picks the brand and the staff screen names it
+  const beer = sec("beer"), at = beer.items.findIndex(it => it[1] === "瓶ビール");
+  beer.items.splice(at, 1, ...M.beer.map(([name, jp]) => [name, jp, beer.items[at][2]]));
+  all.flatMap(s => s.items).forEach(it => { if (M.names[it[1]]) it[0] = M.names[it[1]]; });
+  const {notes, leads, ...text} = M.text;
+  Object.assign(L, text);
+  L.notes = {...L.notes, ...notes};
+  L.leads = {...L.leads, ...leads};
+  Object.assign(DESC, M.desc);
+  // Wine "pairs with" lines and course contents: exact text to replace
+  all.flatMap(s => s.items).forEach(it => {
+    const wine = it.find((x, i) => i > 3 && x && !Array.isArray(x) && typeof x === "object");
+    if (wine && M.wine && M.wine[it[1]]) wine.p = M.wine[it[1]];
+    if (wine && wine.g && M.grapeSep) wine.g = wine.g.split(" / ").join(M.grapeSep);
+    const list = it.find((x, i) => i > 3 && Array.isArray(x));
+    if (list && M.contents) list.forEach((x, i) => { if (M.contents[x]) list[i] = M.contents[x]; });
+  });
+  if (M.photo) Object.assign(PHOTO, M.photo);
+  // Grilling: tip = the text for this dish; null = no grilling note on this dish
+  sec("lean").items.forEach(it => { M.grill[it[1]] = {cut: "thin", tip: M.leanTip}; });
+  Object.entries(M.grill).forEach(([jp, g]) => {
+    if (g === null) { delete NOTES[jp]; return; }
+    Object.assign(NOTES[jp], g);
+    NOTES[jp][L.lang] = g.tip;
+  });
+  // One note under the legend for every count on the menu
+  const note = document.createElement("p");
+  note.className = "legend";
+  note.textContent = L.countNote;
+  document.getElementById("legend").after(note);
+}
 
 
 // courses come first on every menu
